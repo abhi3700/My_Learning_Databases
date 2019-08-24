@@ -68,6 +68,12 @@ Output:
 ```
 
 
+
 ## Redis-Python
 `r` - instance of redis client
 * Get all DB's keys: `r.keys()`
+* Delete keys in a database using `for` loop
+```py
+for item in r.keys():
+    r.delete("{0}".format(item.decode('utf-8')))
+```
