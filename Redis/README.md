@@ -26,6 +26,11 @@ $ redis-cli
 (error) ERR wrong number of arguments for 'keys' command
 127.0.0.1:6379>
 ```
+  - Check if a URI is working: It should respond 'PONG'
+```console
+$ redis-cli -u redis://h:pd4ecec34154bbca551fdeafb94421d0ec41147dab602a6a878e6509ae49f638a@ec2-54-209-85-193.compute-1.amazonaws.com:11989 ping
+PONG
+```
 
 ## References
 * Practice online - https://try.redis.io/
