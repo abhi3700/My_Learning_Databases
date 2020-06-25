@@ -43,6 +43,7 @@ ec2-54-209-85-193.compute-1.amazonaws.com:11989> GET name
 ec2-54-209-85-193.compute-1.amazonaws.com:11989> GET emp_code
 "CL00102"
 ```
+	- For more redis-cli commands, visit [here](https://redis.io/topics/rediscli)
 
 ## References
 * Practice online - https://try.redis.io/
