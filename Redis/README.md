@@ -31,6 +31,18 @@ $ redis-cli
 $ redis-cli -u redis://h:pd4ecec34154bbca551fdeafb94421d0ec41147dab602a6a878e6509ae49f638a@ec2-54-209-85-193.compute-1.amazonaws.com:11989 ping
 PONG
 ```
+	- set, get data on URI
+```console
+$ redis-cli -u redis://h:pd4ecec34154bbca551fdeafb94421d0ec41147dab602a6a878e6509ae49f638a@ec2-54-209-85-193.compute-1.amazonaws.com:11989
+ec2-54-209-85-193.compute-1.amazonaws.com:11989> SET name "abhijit"
+OK
+ec2-54-209-85-193.compute-1.amazonaws.com:11989> SET emp_code "CL00102"
+OK
+ec2-54-209-85-193.compute-1.amazonaws.com:11989> GET name
+"abhijit"
+ec2-54-209-85-193.compute-1.amazonaws.com:11989> GET emp_code
+"CL00102"
+```
 
 ## References
 * Practice online - https://try.redis.io/
