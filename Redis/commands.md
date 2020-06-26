@@ -67,6 +67,56 @@ Output:
 10) "India"
 ```
 
+### Lists
+####__DB Structure:__ Use of `rpush` & `lrange`
+```json
+{
+  "emp_list": [ "Abhijit Roy", "Anuvesh", "Vijay", "Girish", "Abhishek"]
+}
+```
+* Input:
+```console
+> rpush emp_list2 "Abhjit Roy"
+(integer) 1
+> rpush emp_list2 "Anuvesh"
+(integer) 2
+> rpush emp_list2 "Vijay"
+(integer) 3
+> rpush emp_list2 "Girish"
+(integer) 4
+> rpush emp_list2 "Abhishek"
+(integer) 5
+```
+* Output:
+```console
+> lrange emp_list2 0 -1
+1) "Abhjit Roy"
+2) "Anuvesh"
+3) "Vijay"
+4) "Girish"
+5) "Abhishek"
+```
+
+####__DB Structure:__ Use of `lpop` & `lpush`
+```json
+{
+  "emp_list": [ "Abhijit Roy", "Anuvesh", "Vijay", "Girish", "Abhishek"]
+}
+```
+* Input:
+```console
+> rpop emp_list2
+"Abhishek"
+> lpop emp_list2
+"Abhjit Roy"
+```
+* Output:
+```console
+> lrange emp_list2 0 -1
+1) "Anuvesh"
+2) "Vijay"
+3) "Girish"
+```
 
 
 ## Redis-Python
