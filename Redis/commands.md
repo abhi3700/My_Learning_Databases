@@ -68,7 +68,8 @@ Output:
 ```
 
 ### Lists
-####__DB Structure:__ Use of `rpush` & `lrange`
+#### __DB Structure:__ 
+Use of `rpush` & `lrange`
 ```json
 {
   "emp_list": [ "Abhijit Roy", "Anuvesh", "Vijay", "Girish", "Abhishek"]
@@ -97,7 +98,8 @@ Output:
 5) "Abhishek"
 ```
 
-####__DB Structure:__ Use of `lpop` & `lpush`
+#### __DB Structure:__ 
+Use of `lpop` & `lpush`
 ```json
 {
   "emp_list": [ "Abhijit Roy", "Anuvesh", "Vijay", "Girish", "Abhishek"]
