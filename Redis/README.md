@@ -47,6 +47,6 @@ ec2-54-209-85-193.compute-1.amazonaws.com:11989> GET emp_code
 
 ## References
 * Practice online - https://try.redis.io/
-* RedisLab Book (on Redis) - https://redislabs.com/ebook/foreword/
-* Add __Heroku Redis__ for any product - chatbots, Flask/Django Web App. [RECOMMENDED]
+* RedisLab Book (on Redis) - https://redislabs.com/ebook/redis-in-action/
+* Add __Heroku Redis__ for any product - chatbots, Flask/Django Web App. [RECOMMENDED] For more, refer [here](https://github.com/abhi3700/Telegram_Bot_tutorials/tree/master/server)
 * [RedisLab - Geospatial](https://github.com/Altoros/redis-labs-use-cases/tree/master/geospatial)
