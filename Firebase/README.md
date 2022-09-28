@@ -7,6 +7,35 @@
   - NoSQL i.e. Firestore DB
   - SQL i.e. Realtime DB
 
+## Troubleshooting
+
+### 1. Incorrect Data structure
+
+- _Cause_: It doesn't support the data structure you are trying to store.
+- _Solution_: Use the correct data structure as Firebase considers all collection to be an array.
+
+**Before**:
+
+```json
+{
+  "authorization": {
+    "emails": ["vinny@upside.gg", "abhijit@upside.gg", "alejandro@upside.gg"]
+  }
+}
+```
+
+**After**:
+
+```json
+{
+  "authorization": [
+    {
+      "emails": ["vinny@upside.gg", "abhijit@upside.gg", "alejandro@upside.gg"]
+    }
+  ]
+}
+```
+
 ## References
 
 - [Getting started with Firebase for the web – Firebase Fundamentals](https://www.youtube.com/watch?v=rQvOAnNvcNQ)
