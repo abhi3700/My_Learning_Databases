@@ -33,6 +33,45 @@ Here are the steps to get the config files required for Firebase setup in your p
   - For exporting JSON file from Firestore into a local file or object.
   - config file required: `firebaseConfig`, `serviceAccountKey`
 
+## Coding
+
+### querySnapshot
+
+- `querySnapshot` is a snapshot of the data in the database at a particular time.
+- A `querySnapshot`, which is what is returned from the get method, is **not an array nor an iterable**.
+
+https://firebase.google.com/docs/reference/js/firebase.firestore.QuerySnapshot
+
+`forEach` is a method from the `querySnapshot` object, which is why you can use it.
+
+Code snippet:
+
+```js
+db.collection("clients")
+  .get()
+  .then(function (querySnapshot) {
+    querySnapshot.forEach(function (doc) {
+      // console.log(doc);
+      // doc.data() is never undefined for query doc snapshots
+      console.log(doc.id, " => ", doc.data()); // get the
+      console.log(doc.data().about_project.contracts.Token); // get the 'Token' contract info
+    });
+  });
+```
+
+---
+
+To use as **iterable**, use this code:
+
+```js
+const clients = await db.collection("clients").get();
+for (let doc of clients.docs) {
+  console.log(doc.id, " => ", doc.data());
+}
+```
+
+[Reference](https://stackoverflow.com/questions/62454459/why-does-for-each-work-but-for-of-doesnt)
+
 ## Troubleshooting
 
 ### 1. Incorrect Data structure
