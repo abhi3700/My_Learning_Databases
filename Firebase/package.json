@@ -1,0 +1,22 @@
+{
+  "name": "zippy",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "firebase": "^9.10.0",
+    "firebase-admin": "^11.0.1",
+    "firestore-export-import": "^1.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^18.7.4",
+    "eslint": "8.22.0",
+    "eslint-config-next": "12.2.5",
+    "typescript": "^4.7.4"
+  }
+}

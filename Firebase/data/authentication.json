@@ -1,0 +1,12 @@
+{
+  "authentication": [
+    {
+      "username": "vinny1",
+      "password_hash": "743629a89a561ce03ddf615ac6563206ae12041f71e411c997defa8d9bf63eb1"
+    },
+    {
+      "username": "republic1",
+      "password_hash": "f7f3554083f16d59981414cc3aad7e4f34e2d0c57b67f8aad5225b9a5275808d"
+    }
+  ]
+}
