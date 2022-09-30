@@ -37,6 +37,10 @@ Here are the steps to get the config files required for Firebase setup in your p
 
 ### Initialize Firestore
 
+Here are the steps to initialize Firestore in your project:
+
+> This also removes this error: `app/duplicate-app`
+
 ```js
 const fs = require("firebase-admin");
 
@@ -173,6 +177,36 @@ After deployment, the URL will be shown in the terminal as well as in the Fireba
       "emails": ["vinny@upside.gg", "abhijit@upside.gg", "alejandro@upside.gg"]
     }
   ]
+}
+```
+
+### 2. Error: `app/duplicate-app`
+
+- _Cause_: You are trying to initialize the app again.
+- _Solution_: Use this code snippet:
+
+```js
+const fs = require("firebase-admin");
+
+const serviceAccount = require("../../../helper/serviceAccountKey.json");
+
+let db = null;
+
+// initialize firebase
+if (!fs.apps.length) {
+  fs.initializeApp({
+    credential: fs.credential.cert(serviceAccount),
+    // name: "zippy-mvp2",
+  });
+
+  db = fs.firestore();
+
+  // allow undefined values.
+  db.settings({
+    ignoreUndefinedProperties: true,
+  });
+} else {
+  db = fs.app().firestore();
 }
 ```
 
