@@ -35,6 +35,33 @@ Here are the steps to get the config files required for Firebase setup in your p
 
 ## Coding
 
+### Initialize Firestore
+
+```js
+const fs = require("firebase-admin");
+
+const serviceAccount = require("../../../helper/serviceAccountKey.json");
+
+let db = null;
+
+// initialize firebase
+if (!fs.apps.length) {
+  fs.initializeApp({
+    credential: fs.credential.cert(serviceAccount),
+    // name: "zippy-mvp2",
+  });
+
+  db = fs.firestore();
+
+  // allow undefined values.
+  db.settings({
+    ignoreUndefinedProperties: true,
+  });
+} else {
+  db = fs.app().firestore();
+}
+```
+
 ### querySnapshot
 
 - `querySnapshot` is a snapshot of the data in the database at a particular time.
@@ -75,6 +102,10 @@ for (let doc of clients.docs) {
 ## Databases
 
 ### Firestore (NoSQL) DB
+
+#### Structure
+
+- Try to have each document with same fields.
 
 #### Rules:
 
