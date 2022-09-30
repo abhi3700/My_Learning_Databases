@@ -72,6 +72,29 @@ for (let doc of clients.docs) {
 
 [Reference](https://stackoverflow.com/questions/62454459/why-does-for-each-work-but-for-of-doesnt)
 
+## Databases
+
+### Firestore (NoSQL) DB
+
+#### Rules:
+
+For testing, set the rules to:
+
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write;
+    }
+  }
+}
+```
+
+> Your security rules are defined as public, so anyone can steal, modify, or delete data in your database
+
+### Realtime (SQL) DB
+
 ## Apps
 
 ### Android
