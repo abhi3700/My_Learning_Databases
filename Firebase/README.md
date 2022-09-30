@@ -72,6 +72,27 @@ for (let doc of clients.docs) {
 
 [Reference](https://stackoverflow.com/questions/62454459/why-does-for-each-work-but-for-of-doesnt)
 
+## Apps
+
+### Android
+
+### iOS
+
+### Web
+
+#### Deploy
+
+This is regarding deployment of web app into Firebase Hosting.
+
+Following are the steps:
+
+1. Enable "Firebase Hosting" during registering the web app under "Add Firebase to your web app" in Firebase Console [here](https://console.firebase.google.com/project/zippy-mvp2/settings/general/web).
+2. `$ firebase login`
+3. `$ firebase init`
+4. `$ firebase deploy`
+
+After deployment, the URL will be shown in the terminal as well as in the Firebase Console: `https://zippy-mvp2.web.app/` (in my case).
+
 ## Troubleshooting
 
 ### 1. Incorrect Data structure
