@@ -210,6 +210,25 @@ if (!fs.apps.length) {
 }
 ```
 
+### 3. Error: 'Failed to parse private key: Error: Invalid PEM formatted message.'
+
+- _Cause_: The private key used in `.env` file needs string formatting.
+- _Solution_: Do this:
+
+**Before**:
+
+```js
+  // serviceAccountKey.ts
+  private_key: process.env.YOUR_PRIVATE_KEY,
+```
+
+**After**:
+
+```js
+  // serviceAccountKey.ts
+  private_key: process.env.YOUR_PRIVATE_KEY.replace(/\\n/gm, '\n'),
+```
+
 ## References
 
 - [Getting started with Firebase for the web – Firebase Fundamentals](https://www.youtube.com/watch?v=rQvOAnNvcNQ)
