@@ -19,7 +19,7 @@ const db = fs.firestore();
 
 async function main() {
   // check if a collection Id exist
-  isCollectionIdExist(db, 'clients').then(val => console.log(val));
+  isCollectionIdExist(db, 'movies').then(val => console.log(val));
 
   // get document data from collection id
   // M-1: querySnapshot is not an iterable, so no `break` or `continue` is possible
@@ -35,7 +35,7 @@ async function main() {
     });
  */
   // M-2: querySnapshot is an iterable, so `break` or `continue` is possible
-  const clients = await db.collection('clients').get();
+  const clients = await db.collection('movies').get();
   for (let doc of clients.docs) {
     console.log(doc.id, ' => ', doc.data());
   }

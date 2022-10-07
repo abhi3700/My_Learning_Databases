@@ -11,17 +11,15 @@ const jsonFromFirestoreExport = async () => {
     initializeFirebaseApp(serviceAccount, require('./config.ts').databaseURL);
     console.log('Firebase Initialized');
 
-    const collectionNames = ['authentication', 'authorization', 'clients'];
+    const collectionNames = ['authentication', 'authorization', 'movies'];
 
     collectionNames.forEach(collectionName => {
       backups([collectionName]).then(collections => {
         console.log('-----');
-        const clientsKeys = Object.keys(collections[collectionName]); // print the keys
-        console.log(clientsKeys);
+        const moviesKeys = Object.keys(collections[collectionName]); // print the keys
+        console.log(moviesKeys);
         // console.log(JSON.stringify(collections)); // print the entire JSON object "clients"
-        console.log(
-          JSON.stringify(collections[collectionName][clientsKeys[0]]),
-        ); // print the 1st object inside "clients" array
+        console.log(JSON.stringify(collections[collectionName][moviesKeys[0]])); // print the 1st object inside "clients" array
       });
     });
 

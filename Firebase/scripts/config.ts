@@ -1,13 +1,16 @@
+require('dotenv').config();
+
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: 'AIzaSyDVptwLi0IQ-GclxsCZk4_eTox5Twe1k4U',
-  authDomain: 'zippy-mvp.firebaseapp.com',
-  projectId: 'zippy-mvp',
-  storageBucket: 'zippy-mvp.appspot.com',
-  messagingSenderId: '738939368874',
-  appId: '1:738939368874:web:af87445d3f3816f5e427d3',
-  measurementId: 'G-6811XJ1L48',
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID,
+  measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 };
+// export {};
 
 // Exports
 module.exports = firebaseConfig;

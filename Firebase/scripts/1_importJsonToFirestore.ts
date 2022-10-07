@@ -6,7 +6,7 @@ const serviceAccount = require('./serviceAccountKey');
 // JSON to Firestore
 const jsonToFirestoreImport = async () => {
   try {
-    const collectionNames = ['authentication', 'authorization', 'clients'];
+    const collectionNames = ['authentication', 'authorization', 'movies'];
     console.log('Initializing Firebase');
     let start = Date.now();
     initializeFirebaseApp(serviceAccount, require('./config.ts').databaseURL);

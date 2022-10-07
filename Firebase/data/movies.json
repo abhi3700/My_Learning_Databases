@@ -1,0 +1,25 @@
+{
+  "movies": [
+    {
+      "name": "Bahubali",
+      "imdb_rating": 9.5,
+      "actors": ["Prabhas", "Tamanna", "Anushka"],
+      "director": "S.S. Rajamouli",
+      "is_dharma_production": true
+    },
+    {
+      "name": "Bahubali-2",
+      "imdb_rating": 9.5,
+      "actors": ["Prabhas", "Tamanna", "Anushka"],
+      "director": "S.S. Rajamouli",
+      "is_dharma_production": true
+    },
+    {
+      "name": "Brahmastra",
+      "imdb_rating": 9.5,
+      "actors": ["Ranbir", "Alia", "Amitabh", "Nagarjuna"],
+      "director": "Ayan Mukherji",
+      "is_dharma_production": true
+    }
+  ]
+}
