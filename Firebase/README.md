@@ -42,9 +42,9 @@ Here are the steps to initialize Firestore in your project:
 > This also removes this error: `app/duplicate-app`
 
 ```js
-const fs = require("firebase-admin");
+const fs = require('firebase-admin');
 
-const serviceAccount = require("../../../helper/serviceAccountKey.json");
+const serviceAccount = require('../../../helper/serviceAccountKey.json');
 
 let db = null;
 
@@ -52,7 +52,6 @@ let db = null;
 if (!fs.apps.length) {
   fs.initializeApp({
     credential: fs.credential.cert(serviceAccount),
-    // name: "zippy-mvp2",
   });
 
   db = fs.firestore();
@@ -78,13 +77,13 @@ https://firebase.google.com/docs/reference/js/firebase.firestore.QuerySnapshot
 Code snippet:
 
 ```js
-db.collection("clients")
+db.collection('clients')
   .get()
   .then(function (querySnapshot) {
     querySnapshot.forEach(function (doc) {
       // console.log(doc);
       // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, " => ", doc.data()); // get the
+      console.log(doc.id, ' => ', doc.data()); // get the
       console.log(doc.data().about_project.contracts.Token); // get the 'Token' contract info
     });
   });
@@ -95,9 +94,9 @@ db.collection("clients")
 To use as **iterable**, use this code:
 
 ```js
-const clients = await db.collection("clients").get();
+const clients = await db.collection('clients').get();
 for (let doc of clients.docs) {
-  console.log(doc.id, " => ", doc.data());
+  console.log(doc.id, ' => ', doc.data());
 }
 ```
 
@@ -144,12 +143,12 @@ This is regarding deployment of web app into Firebase Hosting.
 
 Following are the steps:
 
-1. Enable "Firebase Hosting" during registering the web app under "Add Firebase to your web app" in Firebase Console [here](https://console.firebase.google.com/project/zippy-mvp2/settings/general/web).
+1. Enable "Firebase Hosting" during registering the web app under "Add Firebase to your web app" in Firebase Console [here](https://console.firebase.google.com/project/{project-id}/settings/general/web).
 2. `$ firebase login`
 3. `$ firebase init`
 4. `$ firebase deploy`
 
-After deployment, the URL will be shown in the terminal as well as in the Firebase Console: `https://zippy-mvp2.web.app/` (in my case).
+After deployment, the URL will be shown in the terminal as well as in the Firebase Console: `https://{project-id}.web.app/` (in my case).
 
 ## Troubleshooting
 
@@ -186,9 +185,9 @@ After deployment, the URL will be shown in the terminal as well as in the Fireba
 - _Solution_: Use this code snippet:
 
 ```js
-const fs = require("firebase-admin");
+const fs = require('firebase-admin');
 
-const serviceAccount = require("../../../helper/serviceAccountKey.json");
+const serviceAccount = require('../../../helper/serviceAccountKey.json');
 
 let db = null;
 
@@ -196,7 +195,6 @@ let db = null;
 if (!fs.apps.length) {
   fs.initializeApp({
     credential: fs.credential.cert(serviceAccount),
-    // name: "zippy-mvp2",
   });
 
   db = fs.firestore();
