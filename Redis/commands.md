@@ -1,55 +1,70 @@
-## Redis
+# Redis
+
 ![](./images/Redis_DataModel.png)
 
 ## Commands
+
 [All commands](https://redis.io/commands)
 
 ## Data Structure
+
 > NOTE:
+>
 > - All keys are always string type.
 > - But, values can be of - string, list, hashes, and sets. Some advanced types include geospatial items and the new stream type.
 
 ### 1. key:value
-__DB Structure:__
+
+**DB Structure:**
+
 ```json
 {
-	"Bahamas": "Nassau",
-	"Croatia": "Zagreb"
+  "Bahamas": "Nassau",
+  "Croatia": "Zagreb"
 }
 ```
 
 ![](./images/1_set_get.png)
 
 ### 2. Multiple key:value
-__DB Structure:__
+
+**DB Structure:**
+
 ```json
 {
-	"Lebanon": "Beirut",
-	"Norway": "Oslo",
-	"France": "Paris",
+  "Lebanon": "Beirut",
+  "Norway": "Oslo",
+  "France": "Paris"
 }
 ```
+
 ![](./images/2_mset_mget.png)
 
-### Hashes
-__DB Structure:__
+### 3. Hashes
+
+**DB Structure:**
+
 ```json
 {
-	"user:1": {
-  		"username": "abhi3700",
-  		"location": "mohali",
-  		"name": "abhijit",
-  		"birthyear": "1996",
-  		"job": "India"
-	}
+  "user:1": {
+    "username": "abhi3700",
+    "location": "mohali",
+    "name": "abhijit",
+    "birthyear": "1996",
+    "job": "India"
+  }
 }
 ```
-* Input:
+
+- Input:
+
 ```console
 > hmset user:1 username abhi3700 location mohali
 > hmset user:1 name abhijit birthyear 1996 job India
 ```
+
 Output:
+
 ```console
 > hget user:1 name
 "abhijit"
@@ -67,15 +82,20 @@ Output:
 10) "India"
 ```
 
-### Lists
-#### __DB Structure:__ 
+### 4. Lists
+
+**DB Structure:**
+
 Use of `rpush` & `lrange`
+
 ```json
 {
-  "emp_list": [ "Abhijit Roy", "Anuvesh", "Vijay", "Girish", "Abhishek"]
+  "emp_list": ["Abhijit Roy", "Anuvesh", "Vijay", "Girish", "Abhishek"]
 }
 ```
-* Input:
+
+- Input:
+
 ```console
 > rpush emp_list2 "Abhjit Roy"
 (integer) 1
@@ -88,7 +108,9 @@ Use of `rpush` & `lrange`
 > rpush emp_list2 "Abhishek"
 (integer) 5
 ```
-* Output:
+
+- Output:
+
 ```console
 > lrange emp_list2 0 -1
 1) "Abhjit Roy"
@@ -98,21 +120,27 @@ Use of `rpush` & `lrange`
 5) "Abhishek"
 ```
 
-#### __DB Structure:__ 
+**DB Structure:**
+
 Use of `lpop` & `lpush`
+
 ```json
 {
-  "emp_list": [ "Abhijit Roy", "Anuvesh", "Vijay", "Girish", "Abhishek"]
+  "emp_list": ["Abhijit Roy", "Anuvesh", "Vijay", "Girish", "Abhishek"]
 }
 ```
-* Input:
+
+- Input:
+
 ```console
 > rpop emp_list2
 "Abhishek"
 > lpop emp_list2
 "Abhjit Roy"
 ```
-* Output:
+
+- Output:
+
 ```console
 > lrange emp_list2 0 -1
 1) "Anuvesh"
@@ -120,31 +148,37 @@ Use of `lpop` & `lpush`
 3) "Girish"
 ```
 
-
 ## Redis-Python
+
 `r` - instance of redis client
-* Get all DB's keys: `r.keys()`
-* Delete keys in a database using `for` loop
+
+- Get all DB's keys: `r.keys()`
+- Delete keys in a database using `for` loop
+
 ```py
 for item in r.keys():
     r.delete("{0}".format(item.decode('utf-8')))
 ```
 
 ### Examples
-* #### __Hash__: dictionary (including nested)
+
+- #### **Hash**: dictionary (including nested)
+
 ```json
 {
-"+918145634656": {
+  "+918145634656": {
     "product_a": {
-        "username": "abhi3701",
-        "country": "India",
-        "key": "Alltest2438542342374",
-        "datetime": "2019-09-29",
-        }
+      "username": "abhi3701",
+      "country": "India",
+      "key": "Alltest2438542342374",
+      "datetime": "2019-09-29"
     }
+  }
 }
 ```
-__Code:__ setting the database & get the `username` value
+
+**Code:** setting the database & get the `username` value
+
 ```py
 phoneno1 = '+918146734455'
 uname1 = 'abhi3701'
@@ -170,7 +204,8 @@ print(json.loads(r.hget(phoneno1, 'product_a').decode('utf-8')).get('username'))
 print(json.loads(r.hget(phoneno1, 'product_a').decode('utf-8'))['username'])
 ```
 
-__Code:__ find the key i.e. `phoneno1` corresponding to a username value - `abhi3702`
+**Code:** find the key i.e. `phoneno1` corresponding to a username value - `abhi3702`
+
 ```py
 key_phone = ""
 
@@ -182,7 +217,8 @@ for k in r.keys():
 print(key_phone)
 ```
 
-* #### __Set__: Immutable list
+- #### **Set**: Immutable list
+
 ```py
 """push the breeds into a set"""
 r.sadd('breeds_set', str(breed_list))   # set members of a set
@@ -190,7 +226,8 @@ breed_list_get = r.smembers('breeds_set')   # get members of a set
 e = next(iter(breed_list_get)).decode('utf-8')  # e --> element
 ```
 
-* #### __List__: Mutable list
+- #### **List**: Mutable list
+
 ```py
 """push the item into breeds list from behind"""
 for b in breed_list:
@@ -198,7 +235,8 @@ for b in breed_list:
 print(f'first breed: {r.lindex('breeds_list', 0).decode('utf-8')}')    # first item
 ```
 
-* #### __Key__: the root keys of the database
+- #### **Key**: the root keys of the database
+
 ```py
 """print all root keys"""
 for k in r.keys():
