@@ -12,9 +12,15 @@
 $ brew install redis
 ```
 
-Verify installation
+---
+
+Verify installation or start redis server
 
 ![](../img/redis-mac-server-start.png)
+
+---
+
+To stop the server, press <kbd>ctrl+c</kbd> on the terminal.
 
 ### ☑️ Ubuntu (via WSL)
 
@@ -29,48 +35,82 @@ Verify installation
   Starting redis-server: redis-server.
   ```
 
-  - Usage
+## Client
+
+Create local redis DB via VSCode extension via clicking on the <kbd>+</kbd> icon on the left panel of either "NoSQL" or "Database Client" extension:
+
+![](../img/redis-vscode-ext-create-db-left-panel.png)
+
+---
+
+On the left panel, this gets created on "NoSQL" extension.
+
+![](../img/redis-vscode-ext-left-panel.png)
+
+---
+
+There is a CLI opened on the right panel. This is the redis-cli. Here, you can run any command: CRUD operations, etc.
+
+![](../img/redis-vscode-cli.png)
+
+---
+
+Stop the server looks like this:
+
+![](../img/redis-cli-stop-server.png)
+
+Now, the CLI shows like this when trying to access the DB:
+
+![](../img/redis-cli-db-not-found.png)
+
+Also in VSCode extension:
+
+`Connection error!connect ECONNREFUSED 127.0.0.1:6379`
+
+![](../img/redis-vscode-ext-db-not-found.png)
+
+## Usage/Commands
+
+```console
+$ redis-cli
+127.0.0.1:6379> get name
+"abhijit"
+127.0.0.1:6379> delete name
+(error) ERR unknown command 'delete'
+127.0.0.1:6379> del name
+(integer) 1
+127.0.0.1:6379> get name
+(nil)
+127.0.0.1:6379> get keys
+(nil)
+127.0.0.1:6379> keys
+(error) ERR wrong number of arguments for 'keys' command
+127.0.0.1:6379>
+```
+
+- For more redis-cli commands, visit [here](https://redis.io/docs/ui/cli/)
+- Check if a URI is working: It should respond 'PONG'
+
+```console
+$ redis-cli -u redis://h:pd4ecec34154bbca551fdeafb94421d0ec41147dab602a6a878e6509ae49f638a@ec2-54-209-85-193.compute-1.amazonaws.com:11989 ping
+PONG
+```
+
+- set, get data on URI
 
   ```console
-  $ redis-cli
-  127.0.0.1:6379> get name
+  $ redis-cli -u redis://h:pd4ecec34154bbca551fdeafb94421d0ec41147dab602a6a878e6509ae49f638a@ec2-54-209-85-193.compute-1.amazonaws.com:11989
+  ec2-54-209-85-193.compute-1.amazonaws.com:11989> SET name "abhijit"
+  OK
+  ec2-54-209-85-193.compute-1.amazonaws.com:11989> SET emp_code "CL00102"
+  OK
+  ec2-54-209-85-193.compute-1.amazonaws.com:11989> GET name
   "abhijit"
-  127.0.0.1:6379> delete name
-  (error) ERR unknown command 'delete'
-  127.0.0.1:6379> del name
-  (integer) 1
-  127.0.0.1:6379> get name
-  (nil)
-  127.0.0.1:6379> get keys
-  (nil)
-  127.0.0.1:6379> keys
-  (error) ERR wrong number of arguments for 'keys' command
-  127.0.0.1:6379>
+  ec2-54-209-85-193.compute-1.amazonaws.com:11989> GET emp_code
+  "CL00102"
   ```
 
-  - For more redis-cli commands, visit [here](https://redis.io/docs/ui/cli/)
-  - Check if a URI is working: It should respond 'PONG'
-
-  ```console
-  $ redis-cli -u redis://h:pd4ecec34154bbca551fdeafb94421d0ec41147dab602a6a878e6509ae49f638a@ec2-54-209-85-193.compute-1.amazonaws.com:11989 ping
-  PONG
-  ```
-
-  - set, get data on URI
-
-    ```console
-    $ redis-cli -u redis://h:pd4ecec34154bbca551fdeafb94421d0ec41147dab602a6a878e6509ae49f638a@ec2-54-209-85-193.compute-1.amazonaws.com:11989
-    ec2-54-209-85-193.compute-1.amazonaws.com:11989> SET name "abhijit"
-    OK
-    ec2-54-209-85-193.compute-1.amazonaws.com:11989> SET emp_code "CL00102"
-    OK
-    ec2-54-209-85-193.compute-1.amazonaws.com:11989> GET name
-    "abhijit"
-    ec2-54-209-85-193.compute-1.amazonaws.com:11989> GET emp_code
-    "CL00102"
-    ```
-
-  - For more redis-cli commands, visit [here](https://redis.io/topics/rediscli)
+- For more redis-cli commands, visit [here](https://redis.io/topics/rediscli)
 
 ## References
 
