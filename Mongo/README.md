@@ -99,43 +99,48 @@ Build Info: {
 
     The background process starts successfully...
 
+    To shutdown the connection, press <kbd>ctrl+c</kbd>.
+
 - To connect to the MongoDB server, run `$ mongosh`
 
-```console
-❯ mongosh
-Current Mongosh Log ID:	63fee439999e5d9c63d6f9c7
-Connecting to:		mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.7.1
-Using MongoDB:		6.0.4
-Using Mongosh:		1.7.1
+  ```console
+  ❯ mongosh
+  Current Mongosh Log ID:	63fee439999e5d9c63d6f9c7
+  Connecting to:		mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.7.1
+  Using MongoDB:		6.0.4
+  Using Mongosh:		1.7.1
 
-For mongosh info see: https://docs.mongodb.com/mongodb-shell/
+  For mongosh info see: https://docs.mongodb.com/mongodb-shell/
 
-------
-   The server generated these startup warnings when booting
-   2023-03-01T11:01:28.618+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
-   2023-03-01T11:01:28.618+05:30: You are running this process as the root user, which is not recommended
-   2023-03-01T11:01:28.618+05:30: This server is bound to localhost. Remote systems will be unable to connect to this server. Start the server with --bind_ip <address> to specify which IP addresses it should serve responses from, or with --bind_ip_all to bind to all interfaces. If this behavior is desired, start the server with --bind_ip 127.0.0.1 to disable this warning
-   2023-03-01T11:01:28.618+05:30: Soft rlimits for open file descriptors too low
-------
+  ------
+  The server generated these startup warnings when booting
+  2023-03-01T11:01:28.618+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+  2023-03-01T11:01:28.618+05:30: You are running this process as the root user, which is not recommended
+  2023-03-01T11:01:28.618+05:30: This server is bound to localhost. Remote systems will be unable to connect to this server. Start the server with --bind_ip <address> to specify which IP addresses it should serve responses from, or with --bind_ip_all to bind to all interfaces. If this behavior is desired, start the server with --bind_ip 127.0.0.1 to disable this warning
+  2023-03-01T11:01:28.618+05:30: Soft rlimits for open file descriptors too low
+  ------
 
-------
-   Enable MongoDB's free cloud-based monitoring service, which will then receive and display
-   metrics about your deployment (disk utilization, CPU, operation statistics, etc).
+  ------
+  Enable MongoDB's free cloud-based monitoring service, which will then receive and display
+  metrics about your deployment (disk utilization, CPU, operation statistics, etc).
 
-   The monitoring data will be available on a MongoDB website with a unique URL accessible to you
-   and anyone you share the URL with. MongoDB may use this information to make product
-   improvements and to suggest MongoDB products and deployment options to you.
+  The monitoring data will be available on a MongoDB website with a unique URL accessible to you
+  and anyone you share the URL with. MongoDB may use this information to make product
+  improvements and to suggest MongoDB products and deployment options to you.
 
-   To enable free monitoring, run the following command: db.enableFreeMonitoring()
-   To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
-------
+  To enable free monitoring, run the following command: db.enableFreeMonitoring()
+  To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
+  ------
 
-test> show dbs
-admin                       40.00 KiB
-config                     108.00 KiB
-local                       72.00 KiB
-mongodbVSCodePlaygroundDB   40.00 KiB
-```
+  test> show dbs
+  admin                       40.00 KiB
+  config                     108.00 KiB
+  local                       72.00 KiB
+  ```
+
+  There are 3 pre-existing DBs: `admin`, `config`, `local`.
+
+  To exit from console, press 2 times <kbd>ctrl+c</kbd> or 1 time <kbd>ctrl+d</kbd> or type `exit`.
 
 ---
 
