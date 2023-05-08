@@ -20,8 +20,6 @@ $ psql
   mydb=#
   ```
 
-- List all tables: `\dt`
-- List all tables in a specific database: `\dt mydb.*`
 - Delete a database: `DROP DATABASE mydb;`
 - Create a table in a database:
 
@@ -36,6 +34,9 @@ $ psql
 
   This query creates a table called "customers" with four columns: "id", "name", "email", and "age". The "id" column is set as the primary key, which means it will contain unique values for each row in the table. The "name" and "email" columns are set to hold strings of up to 50 and 100 characters, respectively, while the "age" column is set to hold integer values.
 
+- List all tables: `\dt`
+- List all tables in a specific database: `\dt mydb.*`
+- View a table structure: `\d <table_name>`. For more, use `\d+ <table_name>`
 - Show all tables in the selected database: `\dt` [on psql shell]
 
   ```sh
@@ -60,6 +61,10 @@ $ psql
 
   > The selected database is `mydb` is on the port where the `postgres` background service is running or was last connected.
 
+- List all schemas: `\dn`
+- List all the users and their roles: `\du`
+- Get a specific user: `\du <username>`
+- List all the functions from your database: `\df`
 - Quit: `\q`
 
 ## GUI App
