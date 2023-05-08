@@ -8,7 +8,8 @@ psql is the PostgreSQL interactive terminal.
 $ psql
 ```
 
-- Connect to a
+- Connect to a database: `❯ psql postgresql://abhi3700:abhi3700@localhost:5432/abhi3700` which would open a shell.
+- Show the connection info: `\conninfo`. It shows the connection info of the current connection.
 - Create a database: `CREATE DATABASE mydb;`
 - List all databases: `\l`
 - Connect to a database: `\c mydb`
