@@ -1,6 +1,9 @@
-# Redis Database
+# PostgreSQL Database
 
 ## Installation
-* `pip install psycopg2`
+
+```sh
+$ brew install postgresql libpg
+```
 
 ## References
