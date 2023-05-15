@@ -20,35 +20,26 @@ $ psql
   mydb=#
   ```
 
-- Delete a database: `DROP DATABASE mydb;`
+- Delete a database:
+
+  ```sql
+  DROP DATABASE mydb;
+  ```
+
 - Create a table in a database:
 
   ```sql
-  CREATE TABLE customers (
-  id INT PRIMARY KEY,
-  name VARCHAR(50),
-  email VARCHAR(100),
-  age INT
+  CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NULL
   );
+
   ```
 
   This query creates a table called "customers" with four columns: "id", "name", "email", and "age". The "id" column is set as the primary key, which means it will contain unique values for each row in the table. The "name" and "email" columns are set to hold strings of up to 50 and 100 characters, respectively, while the "age" column is set to hold integer values.
 
-- List all tables: `\dt`
-- List all tables in a specific database: `\dt mydb.*`
-- View a table structure: `\d <table_name>`. For more, use `\d+ <table_name>`
-- Show all tables in the selected database: `\dt` [on psql shell]
-
-  ```sh
-  mydb=# \dt
-          List of relations
-  Schema |   Name    | Type  |  Owner
-  --------+-----------+-------+----------
-  public | customers | table | abhi3700
-  (1 row)
-  ```
-
-- Show all tables in the selected database: `\dt` [on terminal]
+- List all tables (in the selected database): `\dt` (display tables)
 
   ```sh
   ❯ psql -d mydb -c "\dt"
@@ -60,6 +51,21 @@ $ psql
   ```
 
   > The selected database is `mydb` is on the port where the `postgres` background service is running or was last connected.
+
+- List all tables in a specific database: `\dt mydb.*`
+- View a table structure: `\d <table_name>`. For more, use `\d+ <table_name>`
+- Insert a row in a table
+
+  ```sql
+  INSERT INTO users (first_name, last_name)
+  VALUES ('John', 'Doe');
+  ```
+
+- Show the entire table with data:
+
+  ```sql
+  SELECT * FROM users;
+  ```
 
 - List all schemas: `\dn`
 - List all the users and their roles: `\du`
