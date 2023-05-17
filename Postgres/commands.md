@@ -2,23 +2,41 @@
 
 ## CLI commands
 
-psql is the PostgreSQL interactive terminal.
+> I prefer CLI for CRUD operation. Sometimes, the `$ brew services list` doesn't show appropriate results. That's why use a GUI like `postgres.app`
+
+`psql` is the PostgreSQL interactive terminal.
 
 ```sh
 $ psql
 ```
 
-- Connect to a database: `❯ psql postgresql://abhi3700:abhi3700@localhost:5432/abhi3700` which would open a shell.
+- Check the current version: `$ psql --version`
+- Check the postgresql service details: `$ brew services info postgresql@14`
+- Check to see the listening ports related to `postgres` process: `$ lsof -nP +c 15 | grep LISTEN`
+- Check to see a particular db port (**LISTEN**, **ESTABLISHED**): `$ lsof -i TCP:5432`
+- Check to see a particular db port is listening: `$ lsof -i TCP:5432 | grep LISTEN`
+- Migrate the database to new version if available: `$ brew postgresql-upgrade-database`
+- Connect to localhost: `$ psql -h localhost` (connects to the 1st db alphabetically)
+- Connect to localhost with db: `$ psql -h localhost mydb`
+- Connect to port: `$ psql -p5432` (connects to the 1st db alphabetically)
+- Connect to port with db: `$ psql -p5432 mydb`
+- Connect to a database (with url): `❯ psql postgresql://abhi3700:abhi3700@localhost:5432/abhi3700` which would open a shell.
 - Show the connection info: `\conninfo`. It shows the connection info of the current connection.
 - Create a database: `CREATE DATABASE mydb;`
-- List all databases: `\l`
-- Connect to a database: `\c mydb`
+- List all databases:
+  - `\l` in `psql` REPL terminal
+  - `$ psql -l` in terminal
+- Connect to a database:
 
-  ```sh
-  abhi3700=# \c mydb
-  You are now connected to database "mydb" as user "abhi3700".
-  mydb=#
-  ```
+  - `\c mydb` in `psql` REPL terminal
+
+    ```sh
+    abhi3700=# \c mydb
+    You are now connected to database "mydb" as user "abhi3700".
+    mydb=#
+    ```
+
+  - `$ psql -d mydb`
 
 - Delete a database:
 
@@ -67,6 +85,7 @@ $ psql
   SELECT * FROM users;
   ```
 
+- Drop/Delete a table: `DROP TABLE IF EXISTS users;`
 - List all schemas: `\dn`
 - List all the users and their roles: `\du`
 - Get a specific user: `\du <username>`
@@ -74,6 +93,8 @@ $ psql
 - Quit: `\q`
 
 ## GUI App
+
+> Used to see the connections as `$ brew services list` show improper results at times.
 
 There is an app called 'Postgres.app' which is a full-featured PostgreSQL installation packaged as a standard Mac app.
 

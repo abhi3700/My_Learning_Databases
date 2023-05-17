@@ -3,7 +3,7 @@
 ## Installation
 
 ```sh
-$ brew install postgresql libpg
+$ brew install postgresql@14 libpg
 ```
 
 ## Server
