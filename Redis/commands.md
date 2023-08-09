@@ -1,6 +1,6 @@
 # Redis
 
-![](./images/Redis_DataModel.png)
+![](../img/redis_data_model.png)
 
 ## Commands
 
@@ -24,7 +24,7 @@
 }
 ```
 
-![](./images/1_set_get.png)
+![](../img/1_set_get.png)
 
 ### 2. Multiple key:value
 
@@ -38,7 +38,7 @@
 }
 ```
 
-![](./images/2_mset_mget.png)
+![](../img/2_mset_mget.png)
 
 ### 3. Hashes
 

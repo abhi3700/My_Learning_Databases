@@ -20,6 +20,11 @@ Verify installation or start redis server
 
 ---
 
+Use the **redis-cli** like this:
+![](../img/redis_cli.png)
+
+---
+
 To stop the server, press <kbd>ctrl+c</kbd> on the terminal.
 
 ### ☑️ Ubuntu (via WSL)
