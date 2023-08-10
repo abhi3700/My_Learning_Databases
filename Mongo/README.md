@@ -101,7 +101,7 @@ Build Info: {
 
     To shutdown the connection, press <kbd>ctrl+c</kbd>.
 
-- To connect to the MongoDB server, run `$ mongosh`
+- To connect to the MongoDB server, run `$ mongosh` in a separate tab.
 
   ```console
   ❯ mongosh
@@ -159,7 +159,7 @@ Install this VSCode [extension](https://marketplace.visualstudio.com/items?itemN
 
 Feed the DB url here:
 
-> provided the `mongosh` & `mongod` are running in the terminals.
+> provided the `mongod` & `mongosh` are running in the terminals.
 
 ![](../img/mongo-vscode.png)
 
@@ -172,3 +172,13 @@ Here, <kbd>Connect</kbd> button is to create playground for a new DB.
 When the <kbd>Run</kbd> button is clicked, the playground is executed and the result is shown in the "Playground Result" separate tab.
 
 ## Coding
+
+For Rust, refer [here](https://github.com/abhi3700/My_Learning-Rust/blob/main/libs/databases/mongo).
+
+## Cloud Service Providers
+
+- [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/register) supports different kinds of DB:
+  ![](../img/mongo-atlas-data.png)
+- AWS
+- GCP
+- Azure

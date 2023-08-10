@@ -117,6 +117,22 @@ PONG
 
 - For more redis-cli commands, visit [here](https://redis.io/topics/rediscli)
 
+## Cloud Service Providers
+
+Use redis db instance from external service providers like heroku, render, AWS, etc.
+
+Redis DB hosted on these platforms:
+
+- [Render | All-in-One cloud service](https://dashboard.render.com/) (FREE plan | multiple DB w 30 MB each) comes with TLS support `Tested Ok ✅`
+  - steps:
+    1. create redis instance with a unique name, noeviction (persistent storage), and 30MB memory (FREE plan).
+    2. Now, under "Access Control" of the DB,
+       - [ Not preferred for security reason ❌] press <kbd>Use my IP</kbd> button to allow my IP to access the DB
+       - [preferred for testing purpose], source: "0.0.0.0/0", description: "Everywhere". This will allow access to DB from anywhere.
+    3. Copy the "External Redis URL" and use it in the code as environment variable.
+- [Redis Enterprise Cloud](https://app.redislabs.com/) (FREE plan | 1 DB with 30MB ) doesn't have TLS support. `Tested Ok ✅`
+- [Heroku](https://dashboard.heroku.com/) (No DBs available in FREE plan) ❌ (not preferred for testing)
+
 ## References
 
 - Practice online - https://try.redis.io/
