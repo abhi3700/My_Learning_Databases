@@ -177,8 +177,66 @@ For Rust, refer [here](https://github.com/abhi3700/My_Learning-Rust/blob/main/li
 
 ## Cloud Service Providers
 
-- [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/register) supports different kinds of DB:
-  ![](../img/mongo-atlas-data.png)
-- AWS
-- GCP
-- Azure
+### MongoDB Atlas
+
+To register, visit [here](https://www.mongodb.com/cloud/atlas/register). It supports different kinds of datasets:
+![](../img/mongo-atlas-data.png)
+
+The free tier is called `M0 Sandbox` and it has the following limitations:
+
+- 512 MB storage
+
+---
+
+**Cluster created**:
+
+When DB is created, a cluster is created with default-name as "cluster-0".
+
+---
+
+**Cluster Access**:
+
+There are 2 ways to access the cluster:
+![](../img/mongo-atlas-cluster-security-options.png)
+
+---
+
+**Load sample data**:
+
+We can load sample data like this:
+
+![](../img/mongo-atlas-load-sample-data.png)
+
+After loading sample data, the cluster looks like this:
+
+![](../img/mongo-atlas-cluster-sample-data-loaded.png)
+
+---
+
+**Create Collection**:
+
+When create a collection, there are 3 options to select from:
+
+![](../img/mongo-atlas-create-collection.png)
+
+Normally, `_id` is preferred i.e. Clustered Index Collection.
+
+---
+
+**Get URI**:
+
+Get the connection string from here:
+![](../img/mongo-atlas-connect.png)
+
+---
+
+**Database access**
+
+Add more admins to the project here:
+![](../img/mongo-atlas-add-admin.png)
+
+### AWS
+
+### GCP
+
+### Azure
