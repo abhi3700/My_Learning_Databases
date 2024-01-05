@@ -9,7 +9,7 @@
 ### ✅ macOS (M1)
 
 ```console
-$ brew install redis
+brew install redis
 ```
 
 ---
@@ -131,11 +131,13 @@ Redis DB hosted on these platforms:
        - [preferred for testing purpose], source: "0.0.0.0/0", description: "Everywhere". This will allow access to DB from anywhere.
     3. Copy the "External Redis URL" and use it in the code as environment variable.
 - [Redis Enterprise Cloud](https://app.redislabs.com/) (FREE plan | 1 DB with 30MB ) doesn't have TLS support. `Tested Ok ✅`
-- [Heroku](https://dashboard.heroku.com/) (No DBs available in FREE plan) ❌ (not preferred for testing)
+- [Heroku](https://dashboard.heroku.com/)
+  - Redis Cloud (FREE plan | 1 DB with 30MB)
+  - Rest cloud providers are with paid plans.
 
 ## References
 
-- Practice online - https://try.redis.io/
-- RedisLab Book (on Redis) - https://redislabs.com/ebook/redis-in-action/
+- Practice online - <https://try.redis.io/>
+- RedisLab Book (on Redis) - <https://redislabs.com/ebook/redis-in-action/>
 - Add **Heroku Redis** for any product - chatbots, Flask/Django Web App. [RECOMMENDED] For more, refer [here](https://github.com/abhi3700/Telegram_Bot_tutorials/tree/master/server)
 - [RedisLab - Geospatial](https://github.com/Altoros/redis-labs-use-cases/tree/master/geospatial)
