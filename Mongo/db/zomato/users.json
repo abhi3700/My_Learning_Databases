@@ -1,0 +1,20 @@
+{
+    "_id": "userId123",
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "address": "123 Elm Street",
+    "preferences": ["Italian", "Thai"],
+    "orderHistory": [
+        {
+            "orderId": "orderId456",
+            "restaurantId": "restaurantId789",
+            "items": [
+                { "menuId": "menuId123", "quantity": 2 },
+                { "menuId": "menuId456", "quantity": 1 }
+            ],
+            "totalPrice": 30.0,
+            "orderTime": "2024-02-14T19:20:30Z",
+            "deliveryAddress": "123 Elm Street"
+        }
+    ]
+}

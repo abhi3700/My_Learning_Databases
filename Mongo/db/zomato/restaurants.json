@@ -1,0 +1,32 @@
+{
+    "_id": "restaurantId789",
+    "name": "The Great Italian Pizza",
+    "location": {
+        "address": "456 Main Street",
+        "city": "New York",
+        "zip": "10001"
+    },
+    "cuisine": "Italian",
+    "menu": [
+        {
+            "_id": "menuId123",
+            "itemName": "Margherita Pizza",
+            "description": "Classic Margherita with mozzarella and basil",
+            "price": 10.0
+        },
+        {
+            "_id": "menuId456",
+            "itemName": "Penne alla Vodka",
+            "description": "Penne pasta in a creamy vodka sauce",
+            "price": 12.0
+        }
+    ],
+    "reviews": [
+        {
+            "userId": "userId123",
+            "rating": 5,
+            "comment": "Best pizza in town!",
+            "reviewDate": "2024-02-13"
+        }
+    ]
+}
