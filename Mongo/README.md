@@ -11,10 +11,10 @@
 
 #### Server Setup on CLI
 
-- Install Homebrew `brew`
-- Install using `$ brew tap mongodb/brew`: add the MongoDB Homebrew tap into the Homebrew formulae list
-- To update Homebrew and all existing formulae: `$ brew update`
-- Install `mongodb-community` via `$ brew install mongodb-community@6.0` [Source](https://www.mongodb.com/docs/v6.0/tutorial/install-mongodb-on-os-x/)
+1. Install using `$ brew tap mongodb/brew`: add the MongoDB Homebrew tap into the Homebrew formulae list
+2. To update Homebrew and all existing formulae: `$ brew upgrade mongodb-community`
+3. Install `mongodb-community` via `$ brew install mongodb-community@6.0` [Source](https://www.mongodb.com/docs/v6.0/tutorial/install-mongodb-on-os-x/)
+
 - Now, check the installation of `mongod`, `mongos`
 
 ```console
@@ -105,10 +105,10 @@ Build Info: {
 
   ```console
   ❯ mongosh
-  Current Mongosh Log ID:	63fee439999e5d9c63d6f9c7
-  Connecting to:		mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.7.1
-  Using MongoDB:		6.0.4
-  Using Mongosh:		1.7.1
+  Current Mongosh Log ID: 63fee439999e5d9c63d6f9c7
+  Connecting to:  mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.7.1
+  Using MongoDB:  6.0.4
+  Using Mongosh:  1.7.1
 
   For mongosh info see: https://docs.mongodb.com/mongodb-shell/
 
@@ -240,3 +240,671 @@ Add more admins to the project here:
 ### GCP
 
 ### Azure
+
+## Mongosh
+
+Use the mongosh inside its **Compass** App. It has suggestions.
+Or else, you also have the option to run `$ mongosh` in a separate tab.
+
+To connect mongosh to a connection uri, run
+
+```sh
+mongosh mongodb://localhost:27017
+```
+
+### Playground
+
+```sh
+$ mongosh mongodb+srv://sanju:9M57dhTZ6Mv9W6AL@cluster0.xrlfvc.mongodb.net/
+Current Mongosh Log ID: 662268a94e6ac5be8fc60c
+Connecting to:  mongodb+srv://<credentials>@cluster0.xrlfvc.mongodb.net/?appName=mongosh+2.2.4
+Using MongoDB:  7.0.8
+Using Mongosh:  2.2.4
+
+For mongosh info see: https://docs.mongodb.com/mongodb-shell/
+
+# Show all databases.
+test> show dbs
+sample_airbnb        52.69 MiB
+sample_analytics      9.56 MiB
+sample_geospatial     1.26 MiB
+sample_guides        40.00 KiB
+sample_mflix        111.09 MiB
+sample_restaurants    6.56 MiB
+sample_supplies       1.05 MiB
+sample_training      48.89 MiB
+sample_weatherdata    2.59 MiB
+admin               312.00 KiB
+local                28.15 GiB
+# Create a database and switch to it.
+test> use appdb
+switched to db appdb
+# Drop the database.
+appdb> db.dropDatabase()
+{ ok: 1, dropped: 'appdb' }
+appdb>
+# clear
+appdb> cls
+# current db name
+> db
+appdb
+> db.users.insertOne({"name": "Abhi", "age": "31"})
+{
+  acknowledged: true,
+  insertedId: ObjectId('662269b303e0698e64d42882')
+}
+# List all collections in this DB - appdb.
+> show collections
+users
+> db.users.insertOne({name: 'Alice'})
+{
+  acknowledged: true,
+  insertedId: ObjectId('66226a5003e0698e64d42883')
+}
+# Get all documents (in MongoDB is analogous to rows of a SQL table) or users.
+> db.users.find()
+[
+  {
+    _id: ObjectId('662269b303e0698e64d42882'),
+    name: 'Abhi',
+    age: '31'
+  },
+  { _id: ObjectId('66226a5003e0698e64d42883'), name: 'Alice' }
+]
+> db.users.insertOne({name: 'John', age: 42, address: {street: "71 Gandhi road", pincode: 732435 }})
+{
+  acknowledged: true,
+  insertedId: ObjectId('66226aaa03e0698e64d42884')
+}
+> db.users.find()
+[
+  {
+    _id: ObjectId('662269b303e0698e64d42882'),
+    name: 'Abhi',
+    age: '31'
+  },
+  { _id: ObjectId('66226a5003e0698e64d42883'), name: 'Alice' },
+  {
+    _id: ObjectId('66226aaa03e0698e64d42884'),
+    name: 'John',
+    age: 42,
+    address: { street: '71 Gandhi road', pincode: 732435 }
+  }
+]
+> db.users.insertMany([{name: 'Bob'}, {name: 'Charlie'}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('66226adc03e0698e64d42885'),
+    '1': ObjectId('66226adc03e0698e64d42886')
+  }
+}
+> db.users.find()
+[
+  {
+    _id: ObjectId('662269b303e0698e64d42882'),
+    name: 'Abhi',
+    age: '31'
+  },
+  { _id: ObjectId('66226a5003e0698e64d42883'), name: 'Alice' },
+  {
+    _id: ObjectId('66226aaa03e0698e64d42884'),
+    name: 'John',
+    age: 42,
+    address: { street: '71 Gandhi road', pincode: 732435 }
+  },
+  { _id: ObjectId('66226adc03e0698e64d42885'), name: 'Bob' },
+  { _id: ObjectId('66226adc03e0698e64d42886'), name: 'Charlie' }
+]
+> db.users.find().limit(2)
+[
+  {
+    _id: ObjectId('662269b303e0698e64d42882'),
+    name: 'Abhi',
+    age: '31'
+  },
+  { _id: ObjectId('66226a5003e0698e64d42883'), name: 'Alice' }
+]
+# Use of `sort()` and `limit()`
+> db.users.find().sort({name: 1})
+[
+  {
+    _id: ObjectId('662269b303e0698e64d42882'),
+    name: 'Abhi',
+    age: '31'
+  },
+  { _id: ObjectId('66226a5003e0698e64d42883'), name: 'Alice' },
+  { _id: ObjectId('66226adc03e0698e64d42885'), name: 'Bob' },
+  { _id: ObjectId('66226adc03e0698e64d42886'), name: 'Charlie' },
+  {
+    _id: ObjectId('66226aaa03e0698e64d42884'),
+    name: 'John',
+    age: 42,
+    address: { street: '71 Gandhi road', pincode: 732435 }
+  }
+]
+> db.users.find().sort({name: 1}).limit(3)
+[
+  {
+    _id: ObjectId('662269b303e0698e64d42882'),
+    name: 'Abhi',
+    age: '31'
+  },
+  { _id: ObjectId('66226a5003e0698e64d42883'), name: 'Alice' },
+  { _id: ObjectId('66226adc03e0698e64d42885'), name: 'Bob' }
+]
+> db.users.find().sort({name: -1}).limit(3)
+[
+  {
+    _id: ObjectId('66226aaa03e0698e64d42884'),
+    name: 'John',
+    age: 42,
+    address: { street: '71 Gandhi road', pincode: 732435 }
+  },
+  { _id: ObjectId('66226adc03e0698e64d42886'), name: 'Charlie' },
+  { _id: ObjectId('66226adc03e0698e64d42885'), name: 'Bob' }
+]
+> db.users.find().sort({name: -1, age: 1}).limit(3)
+[
+  {
+    _id: ObjectId('66226aaa03e0698e64d42884'),
+    name: 'John',
+    age: 42,
+    address: { street: '71 Gandhi road', pincode: 732435 }
+  },
+  { _id: ObjectId('66226adc03e0698e64d42886'), name: 'Charlie' },
+  { _id: ObjectId('66226adc03e0698e64d42885'), name: 'Bob' }
+]
+# Use of `skip()` and `limit()`
+> db.users.find().limit(2)
+[
+  {
+    _id: ObjectId('662269b303e0698e64d42882'),
+    name: 'Abhi',
+    age: '31'
+  },
+  { _id: ObjectId('66226a5003e0698e64d42883'), name: 'Alice' }
+]
+> db.users.find().skip(1).limit(2)
+[
+  { _id: ObjectId('66226a5003e0698e64d42883'), name: 'Alice' },
+  {
+    _id: ObjectId('66226aaa03e0698e64d42884'),
+    name: 'John',
+    age: 42,
+    address: { street: '71 Gandhi road', pincode: 732435 }
+  }
+]
+
+> db.users.find({age: '31'})
+{
+  _id: ObjectId('662269b303e0698e64d42882'),
+  name: 'Abhi',
+  age: '31'
+}
+> db.users.find({name: 'John'})
+{
+  _id: ObjectId('66226aaa03e0698e64d42884'),
+  name: 'John',
+  age: 42,
+  address: {
+    street: '71 Gandhi road',
+    pincode: 732435
+  }
+}
+> db.users.find({_id: ObjectId('66226aaa03e0698e64d42884')})
+{
+  _id: ObjectId('66226aaa03e0698e64d42884'),
+  name: 'John',
+  age: 42,
+  address: {
+    street: '71 Gandhi road',
+    pincode: 732435
+  }
+}
+> db.users.find({age: 31})
+<
+# only show name and age of document with name as John
+> db.users.find({name: 'John'}, {name: 1, age: 1})
+{
+  _id: ObjectId('66226aaa03e0698e64d42884'),
+  name: 'John',
+  age: 42
+}
+# only show name and address of document with name as John
+> db.users.find({name: 'John'}, {name: 1, address: 1})
+{
+  _id: ObjectId('66226aaa03e0698e64d42884'),
+  name: 'John',
+  address: {
+    street: '71 Gandhi road',
+    pincode: 732435
+  }
+}
+# only show address of document with name as John that too w/o _id
+> db.users.find({name: 'John'}, {address: 1, _id: 0})
+{
+  address: {
+    street: '71 Gandhi road',
+    pincode: 732435
+  }
+}
+# show everything of person with name 'John', but age.
+> db.users.find({name: 'John'}, {age: 0})
+{
+  _id: ObjectId('66226aaa03e0698e64d42884'),
+  name: 'John',
+  address: {
+    street: '71 Gandhi road',
+    pincode: 732435
+  }
+}
+# show everything of person with name == 'John'
+> db.users.find({name: {$eq: 'John'}})
+{
+  _id: ObjectId('66226aaa03e0698e64d42884'),
+  name: 'John',
+  age: 42,
+  address: {
+    street: '71 Gandhi road',
+    pincode: 732435
+  }
+}
+# show everything of person with name != 'John'
+> db.users.find({name: {$ne: 'John'}})
+{
+  _id: ObjectId('662269b303e0698e64d42882'),
+  name: 'Abhi',
+  age: '31'
+}
+{
+  _id: ObjectId('66226a5003e0698e64d42883'),
+  name: 'Alice'
+}
+{
+  _id: ObjectId('66226adc03e0698e64d42885'),
+  name: 'Bob'
+}
+{
+  _id: ObjectId('66226adc03e0698e64d42886'),
+  name: 'Charlie'
+}
+# show all users with age > 32
+> db.users.find({age: {$gt: 32}})
+{
+  _id: ObjectId('66226aaa03e0698e64d42884'),
+  name: 'John',
+  age: 42,
+  address: {
+    street: '71 Gandhi road',
+    pincode: 732435
+  }
+}
+> db.users.deleteOne({name: 'Abhi'})
+{
+  acknowledged: true,
+  deletedCount: 1
+}
+# show all users whose name is either 'John' or 'Abhi'
+> db.users.find({name: {$in: ["John", "Abhi"]}})
+{
+  _id: ObjectId('66226aaa03e0698e64d42884'),
+  name: 'John',
+  age: 42,
+  address: {
+    street: '71 Gandhi road',
+    pincode: 732435
+  }
+}
+# show all users whose name is neither 'John' nor 'Abhi'
+> db.users.find({name: {$nin: ["John", "Abhi"]}})
+{
+  _id: ObjectId('66226a5003e0698e64d42883'),
+  name: 'Alice'
+}
+{
+  _id: ObjectId('66226adc03e0698e64d42885'),
+  name: 'Bob'
+}
+{
+  _id: ObjectId('66226adc03e0698e64d42886'),
+  name: 'Charlie'
+}
+# show all users whose age field exists and for for age not exists, set false.
+> db.users.find({age: {$exists: true}})
+{
+  _id: ObjectId('66226aaa03e0698e64d42884'),
+  name: 'John',
+  age: 42,
+  address: {
+    street: '71 Gandhi road',
+    pincode: 732435
+  }
+}
+# show all users whose age > 20 and ≤ 42
+> db.users.find({age: {$gt: 20, $lte: 42}})
+{
+  _id: ObjectId('66226aaa03e0698e64d42884'),
+  name: 'John',
+  age: 42,
+  address: {
+    street: '71 Gandhi road',
+    pincode: 732435
+  }
+}
+{
+  _id: ObjectId('66256e6570604beaf3661d03'),
+  name: 'Abhi',
+  age: 21
+}
+# show all users whose age > 20 and ≤ 42 and name == 'Abhi'
+> db.users.find({age: {$gt: 20, $lte: 42}, name: 'Abhi'})
+{
+  _id: ObjectId('66256e6570604beaf3661d03'),
+  name: 'Abhi',
+  age: 21
+}
+# same thing can be done using `$and` operator.
+> db.users.find({$and: [{age: {$gt:20, $lte:42}}, {name: 'Abhi'}]})
+{
+  _id: ObjectId('66256e6570604beaf3661d03'),
+  name: 'Abhi',
+  age: 21
+}
+# We can also use `$or` operator like this.
+> db.users.find({$or: [{age: {$gte: 23}, name: 'John'}]})
+{
+  _id: ObjectId('66226aaa03e0698e64d42884'),
+  name: 'John',
+  age: 42,
+  address: {
+    street: '71 Gandhi road',
+    pincode: 732435
+  }
+}
+# show all users whose age is not greater than 20 i.e. age ≤ 20 and also age field also may not be there.
+# Use of $not negates the condition.
+> db.users.find({age: {$not: {$gt: 20}}})
+{
+  _id: ObjectId('66226a5003e0698e64d42883'),
+  name: 'Alice'
+}
+{
+  _id: ObjectId('66226adc03e0698e64d42885'),
+  name: 'Bob'
+}
+{
+  _id: ObjectId('66226adc03e0698e64d42886'),
+  name: 'Charlie'
+}
+> db.users.insertMany([{name: 'Tom', balance: 100, debt: 200}, {name: 'Kristin', balance: 20, debt: 0}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('66257be270604beaf3661d04'),
+    '1': ObjectId('66257be270604beaf3661d05')
+  }
+}
+# show all users whose debt > balance
+> db.users.find({$expr: {$gt: ['$debt', '$balance']}})
+{
+  _id: ObjectId('66257be270604beaf3661d04'),
+  name: 'Tom',
+  balance: 100,
+  debt: 200
+}
+# show all users whose address.street == '71 Gandhi road'. Here, nested query is used.
+> db.users.find({"address.street": '71 Gandhi road'})
+{
+  _id: ObjectId('66226aaa03e0698e64d42884'),
+  name: 'John',
+  age: 42,
+  address: {
+    street: '71 Gandhi road',
+    pincode: 732435
+  }
+}
+# show all users whose age >= 21
+# Another command: `db.users.find({age: {$gte: 21}}).limit(1)` which returns the same result.
+> db.users.findOne({age: {$gte: 21}})
+{
+  _id: ObjectId('66226aaa03e0698e64d42884'),
+  name: 'John',
+  age: 42,
+  address: {
+    street: '71 Gandhi road',
+    pincode: 732435
+  }
+}
+> db.users.countDocuments({age: {$gte: 21}})
+2
+# update the age of the first document whose age == 42 to 43.
+# if no document is found, it does nothing.
+> db.users.updateOne({age: 42}, {$set: {age: 43}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+> db.users.findOne({age: 43})
+{
+  _id: ObjectId('66226aaa03e0698e64d42884'),
+  name: 'John',
+  age: 43,
+  address: {
+    street: '71 Gandhi road',
+    pincode: 732435
+  }
+}
+> db.users.updateOne({_id: ObjectId('66226aaa03e0698e64d42884')}, {$set: {name: 'John Marwaha', age: 50}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+> db.users.findOne({_id: ObjectId('66226aaa03e0698e64d42884')})
+{
+  _id: ObjectId('66226aaa03e0698e64d42884'),
+  name: 'John Marwaha',
+  age: 50,
+  address: {
+    street: '71 Gandhi road',
+    pincode: 732435
+  }
+}
+# View balance of all users before airdrop
+> db.users.find({balance: {$exists: true}})
+{
+  _id: ObjectId('66257be270604beaf3661d04'),
+  name: 'Tom',
+  balance: 100,
+  debt: 200
+}
+{
+  _id: ObjectId('66257be270604beaf3661d05'),
+  name: 'Kristin',
+  balance: 20,
+  debt: 0
+}
+# Airdrop 20 balance to all users
+> db.users.updateMany({balance: {$exists: true}}, {$inc: {balance: 20}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 2,
+  modifiedCount: 2,
+  upsertedCount: 0
+}
+# View balance of all users after airdrop of 20
+> db.users.find({balance: {$exists: true}}) 
+{
+  _id: ObjectId('66257be270604beaf3661d04'),
+  name: 'Tom',
+  balance: 120,
+  debt: 200
+}
+{
+  _id: ObjectId('66257be270604beaf3661d05'),
+  name: 'Kristin',
+  balance: 40,
+  debt: 0
+}
+# All users pay 5 from balance to reduce debt
+> db.users.updateMany({balance: {$exists: true}}, {$inc: {debt: -5, balance: -5}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 2,
+  modifiedCount: 2,
+  upsertedCount: 0
+}
+# Update field name of all users from name to first_name
+> db.users.updateMany({_id: {$exists: true}}, {$rename: {name: 'first_name'}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 7,
+  modifiedCount: 7,
+  upsertedCount: 0
+}
+# Remove/Unset the age field of all users
+> db.users.updateMany({_id: {$exists: true}}, {$unset: {age: ''}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 7,
+  modifiedCount: 2,
+  upsertedCount: 0
+}
+# Add hobbies to the user with a given id
+> db.users.updateOne({_id: ObjectId('66226aaa03e0698e64d42884')}, {$set: {hobbies: ["swimming", "football"]}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+# View the update user document
+> db.users.find({_id: ObjectId('66226aaa03e0698e64d42884')})
+{
+  _id: ObjectId('66226aaa03e0698e64d42884'),
+  address: {
+    street: '71 Gandhi road',
+    pincode: 732435
+  },
+  first_name: 'John Marwaha',
+  hobbies: [
+    'swimming',
+    'football'
+  ]
+}
+# Add a hobby to the user with a given id
+> db.users.updateOne({_id: ObjectId('66226aaa03e0698e64d42884')}, {$push: {hobbies: "golf"}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+# view the updated user doc.
+> db.users.find({_id: ObjectId('66226aaa03e0698e64d42884')})
+{
+  _id: ObjectId('66226aaa03e0698e64d42884'),
+  address: {
+    street: '71 Gandhi road',
+    pincode: 732435
+  },
+  first_name: 'John Marwaha',
+  hobbies: [
+    'swimming',
+    'football',
+    'golf'
+  ]
+}
+# remove a hobby from the user
+> db.users.updateOne({_id: ObjectId('66226aaa03e0698e64d42884')}, {$pull: {hobbies: "football"}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+# This replaces the whole documnent/object with a new object.
+> db.users.replaceOne({first_name: 'John Marwaha'}, {name: 'John Paaji'})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+# View the replaced document
+> db.users.find({name: 'John Paaji'})
+{
+  _id: ObjectId('66226aaa03e0698e64d42884'),
+  name: 'John Paaji'
+}
+# Delete the replaced document
+> db.users.deleteOne({name: 'John Paaji'})
+{
+  acknowledged: true,
+  deletedCount: 1
+}
+# delete multiple documents that have balance field
+> db.users.deleteMany({balance: {$exists: true}})
+> exit
+```
+
+---
+
+For customers document like this:
+
+```json
+{
+  "_id": {
+    "$oid": "5ca4bbcea2dd94ee58162a6c"
+  },
+  "username": "charleshudson",
+  "name": "Brad Cardenas",
+  "address": "2765 Powers Meadow\nHeatherfurt, CT 53165",
+  "birthdate": {
+    "$date": "1977-05-06T21:57:35.000Z"
+  },
+  "email": "dustin37@yahoo.com",
+  "accounts": [
+    721914,
+    817222,
+    973067,
+    260799,
+    87389
+  ],
+  "tier_and_details": {}
+}
+```
+
+If you want to find users with email containing "yahoo", the query is `db.customers.find({ 'email': {$regex: 'yahoo', $options: 'i'} })`. This will return all users whose email contains "yahoo" in any case. For precise matching, use `db.customers.find({ 'email': {$regex: 'yahoo'} })`.
+
+## References
+
+### Official
+
+- Ask MongoDB AI at the [MongoDB Manual](https://www.mongodb.com/docs/manual/) about anything related to query, command, code, etc. It uses RAG under the hood, so doesn't hallucilate.
+![](../img/mongodb-ai.png)
+
+- [MongoDB Documentation](https://www.mongodb.com/docs/)
+- [MongoDB Manual](https://www.mongodb.com/docs/manual/)
+- [MongoDB Shell](https://www.mongodb.com/docs/mongodb-shell/)
+- [MongoDB Drivers](https://www.mongodb.com/docs/drivers/) i.e. Client Libraries. Supports almost all popular languages.
+  - [Rust](https://www.mongodb.com/docs/drivers/rust/current/)
+- [MongoDB University](https://learn.mongodb.com/)
+
+### Videos
+
+- [MongoDB Crash Course](https://www.youtube.com/watch?v=ofme2o29ngU) ✅
