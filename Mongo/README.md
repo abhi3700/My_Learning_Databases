@@ -891,6 +891,27 @@ For customers document like this:
 
 If you want to find users with email containing "yahoo", the query is `db.customers.find({ 'email': {$regex: 'yahoo', $options: 'i'} })`. This will return all users whose email contains "yahoo" in any case. For precise matching, use `db.customers.find({ 'email': {$regex: 'yahoo'} })`.
 
+## Troubleshooting
+
+### 1. `MongoDB Error: Kind: Server selection timeout: No available servers. Topology: { Type: ReplicaSetNoPrimary, .....`
+
+Full error:
+
+```sh
+Error: Kind: Server selection timeout: No available servers. Topology: { Type: ReplicaSetNoPrimary, Set Name: atlas-3wdz0g-shard-0, Servers: [ { Address: ac-xdtjxkm-shard-00-01.xrlfvc5.mongodb.net:27017, Type: Unknown }, { Address: ac-xdtjxkm-shard-00-00.xrlfvc5.mongodb.net:27017, Type: Unknown }, { Address: ac-xdtjxkm-shard-00-02.xrlfvc5.mongodb.net:27017, Type: Unknown } ] }, labels: {}
+```
+
+- *Cause*: Somehow the MongoDB connection string although being correct, is not discoverable by the Heroku app. I have experienced this in all other cloud providers like Render, Koyeb as well. Inspite of trying many different URI formats, the issue persisted.
+
+```sh
+MONGODB_URI=mongodb://USERNAME:PASSWORD@ac-xdtjxkm-shard-00-00.xrlfvc5.mongodb.net:27017,ac-xdtjxkm-shard-00-01.xrlfvc5.mongodb.net:27017,ac-xdtjxkm-shard-00-02.xrlfvc5.mongodb.net:27017/?ssl=true&connectTimeoutMS=30000&serverSelectionTimeoutMS=30000&w=majority&tlsAllowInvalidCertificates=true&authSource=admin&replicaSet=atlas-3wdz0g-shard-0
+MONGODB_URI=mongodb+srv://USERNAME:PASSWORD@cluster0.xrlfvc5.mongodb.net/
+MONGODB_URI=mongodb://USERNAME:PASSWORD@ac-xdtjxkm-shard-00-02.xrlfvc5.mongodb.net:27017
+MONGODB_URI=mongodb+srv://USERNAME:PASSWORD@cluster0.xrlfvc5.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+```
+
+- *Solution*: I simply switched to other MongoDB cloud provider like DigitalOcean. And on setting the URI in the Heroku app, the issue got solved 🎉.
+
 ## References
 
 ### Official
