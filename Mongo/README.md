@@ -912,6 +912,8 @@ MONGODB_URI=mongodb+srv://USERNAME:PASSWORD@cluster0.xrlfvc5.mongodb.net/?retryW
 
 - *Solution*: I simply switched to other MongoDB cloud provider like DigitalOcean. And on setting the URI in the Heroku app, the issue got solved 🎉.
 
+  Also, added this solution for community reference in [StackOverflow](https://stackoverflow.com/a/78913525/6774636).
+
 ## References
 
 ### Official
