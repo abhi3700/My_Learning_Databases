@@ -1,4 +1,4 @@
-# MongoDB database notes
+# Notes on MongoDB Models
 
 - A database (with name like Zomato) can have collections
   

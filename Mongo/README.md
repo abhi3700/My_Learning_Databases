@@ -4,6 +4,36 @@
 
 - NoSQL database
 - Document based database in JSON format
+- Supports:
+  - IP Whitelisting
+  - Authentication: Create users with different roles with username and password. In this way, in case of data breach, the damage is limited to the data accessible to that particular user & also the user can be tracked.
+  > Here, the user could be a human or a code using the username & password.
+  - SSL/TLS encryption
+- Different cluster types:
+  - Single node
+  - Replica set: Normally in FREE tier, you get a replica set with 3 nodes.
+  - Sharded cluster: For scaling horizontally.
+    - Config servers: For storing metadata about the sharded cluster.
+    - Shards: For storing data.
+    - Routers: For routing requests to the shards.
+- DB Providers:
+  - MongoDB Atlas by MongoDB Inc.
+  - DigitalOcean
+  - AWS
+  - GCP
+  - Azure
+  - [Clever Cloud](https://www.clever-cloud.com/product/mongodb/) (starts with 17 EUR/month)
+- Valid URI formats:
+
+```
+MONGODB_URI=mongodb://127.0.0.1:27017/
+MONGODB_URI=mongodb+srv://dalvath3700:R3SaL5ArgFVsaPwK@cluster0.xrlfvc5.mongodb.net/
+MONGODB_URI=mongodb+srv://dalvath3700:R3SaL5ArgFVsaPwK@cluster0.xrlfvc5.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+MONGODB_URI=mongodb://dalvath3700:R3SaL5ArgFVsaPwK@ac-xdtjxkm-shard-00-02.xrlfvc5.mongodb.net:27017
+MONGODB_URI=mongodb://dalvath3700:R3SaL5ArgFVsaPwK@ac-xdtjxkm-shard-00-00.xrlfvc5.mongodb.net:27017,ac-xdtjxkm-shard-00-01.xrlfvc5.mongodb.net:27017,ac-xdtjxkm-shard-00-02.xrlfvc5.mongodb.net:27017/?ssl=true&connectTimeoutMS=30000&serverSelectionTimeoutMS=30000&w=majority&tlsAllowInvalidCertificates=true&authSource=admin&replicaSet=atlas-3wdz0g-shard-0
+```
+
+To get the replica nodes, run `$ python3 get_mongo_nodes.py` in [`nslookup`](./nslookup/) directory.
 
 ## Installation
 
@@ -253,6 +283,8 @@ mongosh mongodb://localhost:27017
 ```
 
 ### Playground
+
+<details><summary>Details</summary>
 
 ```sh
 $ mongosh mongodb+srv://sanju:9M57dhTZ6Mv9W6AL@cluster0.xrlfvc.mongodb.net/
@@ -890,6 +922,8 @@ For customers document like this:
 ```
 
 If you want to find users with email containing "yahoo", the query is `db.customers.find({ 'email': {$regex: 'yahoo', $options: 'i'} })`. This will return all users whose email contains "yahoo" in any case. For precise matching, use `db.customers.find({ 'email': {$regex: 'yahoo'} })`.
+
+</details>
 
 ## Troubleshooting
 
