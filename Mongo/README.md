@@ -205,6 +205,87 @@ When the <kbd>Run</kbd> button is clicked, the playground is executed and the re
 
 For Rust, refer [here](https://github.com/abhi3700/My_Learning-Rust/blob/main/libs/databases/mongo).
 
+---
+
+Transactions in MongoDB: It's ACID compliant. This means that while performing a write operation, the following things happen:
+
+1. Atomicity: The operation is performed as a single unit of work.
+2. Consistency: The operation is performed in a consistent manner.
+3. Isolation: The operation is performed in an isolated manner.
+4. Durability: The operation is performed in a durable manner.
+
+Watch [this](https://www.youtube.com/watch?v=ErszXERETr0) video for a complete walkthrough.
+
+This is how transactions are performed in MongoDB:
+
+```rust
+  let mut session = self.db_client.start_session().await?;
+  session.start_transaction().await?;
+
+  // Update `wallet_offchain` of sender & receiver in their respective documents in "users"
+  // collection.
+  users_collection
+   .update_one(
+    doc! {"user_id": &from_user_id},
+    doc! {
+     "$set": {
+      format!("wallet_offchain.{}.debited", coin): sender_update_doc_set,
+     },
+     "$push": {
+      format!("wallet_offchain.{}.payments", coin): &payment_id_next
+     }
+    },
+   )
+   .session(&mut session)
+   .await?;
+  users_collection
+   .update_one(
+    doc! {"user_id": &to_user_id},
+    doc! {
+     "$set": {
+      format!("wallet_offchain.{}.credited", coin): receiver_update_doc_set,
+     },
+     "$push": {
+      format!("wallet_offchain.{}.payments", coin): &payment_id_next
+     }
+    },
+   )
+   .session(&mut session)
+   .await?;
+
+  let payment_receipt_doc = PaymentReceiptDocument {
+   payment_id: payment_id_next.clone(),
+   sender_user_id: from_user_id,
+   receiver_user_id: to_user_id,
+   coin,
+   amount: amount.to_string(),
+   memo,
+   deleted_by: None,
+  };
+
+  // Add the payment receipt to the "payments" collection.
+  let payments_collection: Collection<PaymentReceiptDocument> = self
+   .db_client
+   .database(PAYMENT_DB_NAME)
+   .collection(PAYMENT_RECEIPTS_COLLECTION_NAME);
+  payments_collection.insert_one(payment_receipt_doc).await?;
+
+  // update the 'payment_id_next' in payment_global_collection
+  payment_global_collection
+  .update_one(
+   doc! {},
+   doc! {
+    "$set": {
+     "payment_id_next": to_bson(&payment_id_next.parse::<u128>()?.checked_add(1).ok_or_eyre("Error in incrementing payment id")?)?,
+    }
+   },
+  )
+  .session(&mut session)
+  .await?;
+
+  session.commit_transaction().await?;
+```
+
 ## Cloud Service Providers
 
 ### MongoDB Atlas
@@ -264,6 +345,10 @@ Get the connection string from here:
 
 Add more admins to the project here:
 ![](../img/mongo-atlas-add-admin.png)
+
+**Network Access**:
+
+TODO: Add image
 
 ### AWS
 
@@ -965,3 +1050,4 @@ MONGODB_URI=mongodb+srv://USERNAME:PASSWORD@cluster0.xrlfvc5.mongodb.net/?retryW
 ### Videos
 
 - [MongoDB Crash Course](https://www.youtube.com/watch?v=ofme2o29ngU) ✅
+- [Transactions in MongoDB: Complete Walkthrough](https://www.youtube.com/watch?v=ErszXERETr0) ✅
