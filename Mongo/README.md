@@ -1033,6 +1033,79 @@ MONGODB_URI=mongodb+srv://USERNAME:PASSWORD@cluster0.xrlfvc5.mongodb.net/?retryW
 
   Also, added this solution for community reference in [StackOverflow](https://stackoverflow.com/a/78913525/6774636).
 
+### 2. “TransientTransactionError”
+
+- *Cause*:
+
+  This error was found during manual API testing. And it was ok when retried, but the payment_id was not added to DB (major) & also the balance not updated (minor).
+
+  If the error message is `MongoNetworkError`, it means the transient transaction error is related to the network connectivity between the client and the server. So, might be due to internet issue. More: <https://stackoverflow.com/questions/52153538/what-is-a-transienttransactionerror-in-mongoose-or-mongodb>
+
+  Generally, in my opinion, it can happen during long wait in a session like `65s` or so. So, there could be timeout issue as the default timeout is set to 60s. In OmniPay, it can occur when paying onchain especially during “FREE | zero allowance” case.
+
+- *Solution*:
+  - Increase the session max. commit time to `120s`.
+
+  ```rust
+  session
+      .start_transaction()
+      .max_commit_time(Duration::from_secs(120))
+      .await
+      .map_err(OmniPayError::DatabaseError)?;
+  ```
+
+- In your MongoDB configuration, let's add some more options to improve reliability:
+
+  ```rust
+  let mut client_options = ClientOptions::parse(MONGODB_URI.to_string()).await?;
+      client_options.max_pool_size = Some(50);
+      client_options.min_pool_size = Some(10);  // Ensure a minimum number of connections
+      client_options.retry_writes = Some(true);  // Enable automatic retries for write operations
+      client_options.retry_reads = Some(true);   // Enable automatic retries for read operations
+      client_options.server_selection_timeout = Some(Duration::from_secs(30));  // Increase server selection timeout
+  ```
+
+- Add retry by looping (alongwith ***exponential backoff strategy***) around the DB `update_one` method like this:
+  - **Code**
+
+  ```rust
+      let mut retries = 0;
+      let mut delay = Duration::from_millis(100);  // Start with a 100ms delay
+      loop {
+          match users_collection
+              .update_one(
+                  doc! {"user_id": &from_user_id},
+                  doc! {
+                      "$set": update_doc_set.clone(),
+                      "$push": {
+                          format!("wallet_onchain.{}.{}.payments", coin, chain_name): &tx_hash
+                      }
+                  },
+              )
+              .session(&mut *session)
+              .await
+          {
+              Ok(_) => {
+                  tracing::info!("Transaction committed! 🎉");
+                  return Ok(tx_hash);
+              },
+              Err(e) if retries < MAX_RETRIES && matches!(e.to_string().as_str(), TRANSIENT_TRANSACTION_ERROR) => {
+                  retries += 1;
+                  tracing::warn!(
+                      "TransientTransactionError encountered. Retrying in {:?}... (attempt {}/{})",
+                      delay,
+                      retries,
+                      MAX_RETRIES
+                  );
+                  tokio::time::sleep(delay).await;
+                  delay *= 2;  // Exponential backoff
+              },
+              Err(e) => return Err(e.into()),
+          }
+      }
+  }
+  ```
+
 ## References
 
 ### Official
