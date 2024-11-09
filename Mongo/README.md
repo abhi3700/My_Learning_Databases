@@ -97,13 +97,13 @@ Build Info: {
       unbound           none
       ```
 
-      This error is not concerning as the service would be manually run in a separate terminal.
+      This error is not concerning as the service can manually be run in a separate terminal.
 
   - ✅ manually as a background process, run:
 
     - `$ mongod --config /opt/homebrew/etc/mongod.conf --fork`, but it would fail with the following error:
 
-    ```console
+    ```sh
     ❯ mongod --config /opt/homebrew/etc/mongod.conf --fork
 
     about to fork child process, waiting until server is ready for connections.
@@ -123,7 +123,7 @@ Build Info: {
 
     Now, run this command with `sudo`:
 
-    ```console
+    ```sh
     ❯ sudo mongod --dbpath /opt/homebrew/var/mongodb
     ```
 

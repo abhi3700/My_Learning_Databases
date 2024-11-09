@@ -6,6 +6,121 @@
 
 [All commands](https://redis.io/commands)
 
+---
+
+- `redis-cli`: to access the redis server. By default, it runs on `localhost:6379`. Enters into interactive mode.
+- `redis-server`: to start the redis server.
+- `redis-cli --scan --pattern '*'`: to scan the keys without blocking the server (especially useful in production).
+
+<details>
+<summary>Usage</summary>
+
+```sh
+$ redis-cli --scan --pattern '*'
+"sample_session:234567890"
+"sample_session:890123456"
+"bike:1"
+"sample_session:123456789"
+"sample_jobQueue:ticket:103"
+"sample_leaderboard:tetris"
+"sample_session:990011223"
+"sample_session:334455667"
+"sample_session:012345678"
+"sample_session:556677889"
+"sample_jobQueue:ticket:102"
+"sample_session:778899001"
+"sample_session:345678901"
+"sample_session:789012345"
+"sample_session:112233445"
+"sample_session:456789012"
+"sample_session:901234567"
+"sample_session:567890123"
+"sample_jobQueue:ticket:101"
+"sample_session:678901234"
+"sample_jobQueue:waitingList"
+```
+
+</details>
+
+- `redis-cli -h <host> -p <port>`: to connect to a redis server running on a different host or port.
+- `info keyspace`: to get the number of keys in the database.
+- `info memory`: to get the memory usage of the database.
+- `info clients`: to get the number of clients connected to the database.
+
+<details>
+<summary>Usage</summary>
+
+```sh
+$ info clients
+# Clients
+connected_clients:5
+cluster_connections:0
+maxclients:10000
+client_recent_max_input_buffer:16896
+client_recent_max_output_buffer:0
+blocked_clients:0
+tracking_clients:0
+clients_in_timeout_table:0
+total_blocking_keys:0
+total_blocking_keys_on_nokey:0
+```
+
+</details>
+
+- `info stats`: to get the stats of the database.
+- `info server`: to get the server info.
+
+<details>
+<summary>Usage</summary>
+
+```sh
+$ info server
+# Server
+redis_version:7.2.6
+redis_git_sha1:00000000
+redis_git_dirty:0
+redis_build_id:9bb279ad39b0d83e
+redis_mode:standalone
+os:Darwin 23.6.0 arm64
+arch_bits:64
+monotonic_clock:POSIX clock_gettime
+multiplexing_api:kqueue
+atomicvar_api:c11-builtin
+gcc_version:4.2.1
+process_id:38938
+process_supervised:no
+run_id:6b4ceeed4d7b16ed117fe7d86a5d9f67d2f4aefa
+tcp_port:6379
+server_time_usec:1731179834949760
+uptime_in_seconds:12598
+uptime_in_days:0
+hz:10
+configured_hz:10
+lru_clock:3126586
+executable:/Users/abhi3700/redis-server
+config_file:
+io_threads_active:0
+listener0:name=tcp,bind=*,bind=-::*,port=6379
+```
+
+</details>
+
+- `ping`: to check if the redis server is running.
+
+<details>
+<summary>Usage</summary>
+
+```sh
+$ redis-cli PING
+PONG
+```
+
+</details>
+
+- `GET <key>`: to get the value of a key.
+
+---
+
 ## Data Structure
 
 > NOTE:
@@ -147,6 +262,85 @@ Use of `lpop` & `lpush`
 2) "Vijay"
 3) "Girish"
 ```
+
+---
+
+### Example | Pools
+
+```json
+{
+  "pools": {
+    "Ethereum": {
+      "last_batch_id": 1,
+      "processing_ids": [0],
+      "pending_ids": [1],
+      "pending_txs": {
+        "1": [
+          {
+            "from_user_id": "1001",
+            "token_address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+            "from_address": "0xc0ce9FfacE7522a7F40F38185e4D173a7aCda589",
+            "to_address": "0xe364Bba68779061D8EEF20B5D89Be195b263fC41",
+            "amount": "15000000"
+          },
+          {
+            "from_user_id": "1002",
+            "token_address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+            "from_address": "0xc0ce9FfacE7522a7F40F38185e4D173a7aCda589",
+            "to_address": "0xe364Bba68779061D8EEF20B5D89Be195b263fC41",
+            "amount": "15000000"
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+- To create this data using CLI:
+
+```sh
+set pools:Ethereum last_batch_id 1
+rpush pools:Ethereum:processing_ids 1
+rpush pools:Ethereum:processing_ids 2
+rpush pools:Ethereum:pending_ids 3 4
+# 440 B for 1st hash & thereafter 280 B for each additional field
+hset pools:Ethereum:pending_txs 1 '{"from_user_id": "1001", "token_address": "0xdac17f958d2ee523a2206206994597c13d831ec7", "from_address": "0xc0ce9FfacE7522a7F40F38185e4D173a7aCda589", "to_address": "0xe364Bba68779061D8EEF20B5D89Be195b263fC41", "amount": "15000000"}'
+
+# Add PendingTx object to the pending_txs's bundle_id (1)
+rpush pools:Ethereum:pending_txs:1 '{"from_user_id": "1001", "token_address": "0xdac17f958d2ee523a2206206994597c13d831ec7", "from_address": "0xc0ce9FfacE7522a7F40F38185e4D173a7aCda589", "to_address": "0xe364Bba68779061D8EEF20B5D89Be195b263fC41", "amount": "15000000"}'
+```
+
+- Increase the `last_batch_id` by 1:
+
+```sh
+incr pools:Ethereum last_batch_id
+```
+
+- Get the pending_ids & processing_ids:
+
+```sh
+lrange pools:Ethereum:pending_ids 0 -1
+lrange pools:Ethereum:processing_ids 0 -1
+```
+
+- push a bundle_id (1) to `processing_ids`:
+
+```sh
+rpush pools:Ethereum:processing_ids 1
+```
+
+- remove a bundle_id (4) from `pending_ids` & add it to `processing_ids`:
+
+```sh
+# lrem <key> <count> <value>
+lrem pools:Ethereum:pending_txs 0 4
+rpush pools:Ethereum:processing_ids 4
+```
+
+> NOTE: In `lrem`, `count` is the number of occurrences to remove from the list. 0 means all occurrences.
+
+---
 
 ## Redis-Python
 
