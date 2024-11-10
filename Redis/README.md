@@ -137,7 +137,8 @@ Redis DB hosted on these platforms:
 
 ## References
 
-- Practice online - <https://try.redis.io/>
+- ~~Practice online - <https://try.redis.io/>~~ [DEPRECATED]
 - RedisLab Book (on Redis) - <https://redislabs.com/ebook/redis-in-action/>
 - Add **Heroku Redis** for any product - chatbots, Flask/Django Web App. [RECOMMENDED] For more, refer [here](https://github.com/abhi3700/Telegram_Bot_tutorials/tree/master/server)
 - [RedisLab - Geospatial](https://github.com/Altoros/redis-labs-use-cases/tree/master/geospatial)
+- [Tutorial on Redis Lua Scripting](https://www.squash.io/tutorial-on-redis-lua-scripting/)

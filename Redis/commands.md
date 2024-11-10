@@ -271,10 +271,10 @@ Use of `lpop` & `lpush`
 {
   "pools": {
     "Ethereum": {
-      "last_batch_id": 1,
-      "processing_ids": [0],
-      "pending_ids": [1],
-      "pending_txs": {
+      "last_bundle_id": 1,
+      "processing_bundle_ids": [0],
+      "pending_bundle_ids": [1],
+      "bundles": {
         "1": [
           {
             "from_user_id": "1001",
@@ -300,47 +300,128 @@ Use of `lpop` & `lpush`
 - To create this data using CLI:
 
 ```sh
-set pools:Ethereum last_batch_id 1
-rpush pools:Ethereum:processing_ids 1
-rpush pools:Ethereum:processing_ids 2
-rpush pools:Ethereum:pending_ids 3 4
+set pools:Ethereum last_bundle_id 1
+rpush pools:Ethereum:processing_bundle_ids 1
+rpush pools:Ethereum:processing_bundle_ids 2
+rpush pools:Ethereum:pending_bundle_ids 3 4
 # 440 B for 1st hash & thereafter 280 B for each additional field
-hset pools:Ethereum:pending_txs 1 '{"from_user_id": "1001", "token_address": "0xdac17f958d2ee523a2206206994597c13d831ec7", "from_address": "0xc0ce9FfacE7522a7F40F38185e4D173a7aCda589", "to_address": "0xe364Bba68779061D8EEF20B5D89Be195b263fC41", "amount": "15000000"}'
+hset pools:Ethereum:bundles 1 '{"from_user_id": "1001", "token_address": "0xdac17f958d2ee523a2206206994597c13d831ec7", "from_address": "0xc0ce9FfacE7522a7F40F38185e4D173a7aCda589", "to_address": "0xe364Bba68779061D8EEF20B5D89Be195b263fC41", "amount": "15000000"}'
 
-# Add PendingTx object to the pending_txs's bundle_id (1)
-rpush pools:Ethereum:pending_txs:1 '{"from_user_id": "1001", "token_address": "0xdac17f958d2ee523a2206206994597c13d831ec7", "from_address": "0xc0ce9FfacE7522a7F40F38185e4D173a7aCda589", "to_address": "0xe364Bba68779061D8EEF20B5D89Be195b263fC41", "amount": "15000000"}'
+# Add PendingTx object to the bundles's bundle_id (1)
+rpush pools:Ethereum:bundles:1 '{"from_user_id": "1001", "token_address": "0xdac17f958d2ee523a2206206994597c13d831ec7", "from_address": "0xc0ce9FfacE7522a7F40F38185e4D173a7aCda589", "to_address": "0xe364Bba68779061D8EEF20B5D89Be195b263fC41", "amount": "15000000"}'
 ```
 
-- Increase the `last_batch_id` by 1:
+- Increase the `last_bundle_id` by 1:
 
 ```sh
-incr pools:Ethereum last_batch_id
+incr pools:Ethereum last_bundle_id
 ```
 
-- Get the pending_ids & processing_ids:
+- Get the pending_bundle_ids & processing_bundle_ids:
 
 ```sh
-lrange pools:Ethereum:pending_ids 0 -1
-lrange pools:Ethereum:processing_ids 0 -1
+lrange pools:Ethereum:pending_bundle_ids 0 -1
+lrange pools:Ethereum:processing_bundle_ids 0 -1
 ```
 
-- push a bundle_id (1) to `processing_ids`:
+- push a bundle_id (1) to `processing_bundle_ids`:
 
 ```sh
-rpush pools:Ethereum:processing_ids 1
+rpush pools:Ethereum:processing_bundle_ids 1
 ```
 
-- remove a bundle_id (4) from `pending_ids` & add it to `processing_ids`:
+- remove a bundle_id (4) from `pending_bundle_ids` & add it to `processing_bundle_ids`:
 
 ```sh
 # lrem <key> <count> <value>
-lrem pools:Ethereum:pending_txs 0 4
-rpush pools:Ethereum:processing_ids 4
+lrem pools:Ethereum:bundles 0 4
+rpush pools:Ethereum:processing_bundle_ids 4
 ```
 
 > NOTE: In `lrem`, `count` is the number of occurrences to remove from the list. 0 means all occurrences.
 
+- Remove the entire pool of Ethereum:
+  ![](../img/pools_ethereum.png)
+
+```sh
+redis-cli KEYS 'pools2:Ethereum:*' | xargs redis-cli DEL
+```
+
+List all matching keys starting with `pools2:Ethereum:` & then run `xargs` command to delete each of them with `redis-cli DEL` command.
+> This can be a heavy process run in production. So, expect some delay.
+
 ---
+
+## Lua Scripts
+
+In order to avoid to & fro communication between the client & server, we can use Lua scripts to execute multiple commands in a single execution. Redis Lua Scripting allows you to perform **atomic operations**, ensuring that multiple Redis commands are executed as a single atomic operation. This is particularly useful when you need to update multiple keys or perform complex operations that require consistency.
+
+Like to get "Hello it's Monday, but has a meeting on Blockchain", we can use a Lua script to execute the following commands in a single execution:
+
+```lua
+local day = redis.call('get', 'day')
+if not day then
+  return 'Hello it\'s Monday, but has a meeting on Blockchain'
+end
+local meeting_topic = redis.call('get', 'meeting_topic')
+if not meeting_topic then
+  return 'Hello it\'s ' .. day .. ', but has no meeting'
+end
+
+return 'Hello it\'s ' .. day .. ', but has a meeting on ' .. meeting_topic
+```
+
+And then run the script using the `EVAL` command or inside a rust program.
+
+```sh
+eval "return \"Hello it's \" .. KEYS[1] .. \" but has a meeting on \" .. KEYS[2]" 2 Monday Blockchain
+```
+
+> NOTE: Please note that `2` is the number of keys that the script will use. `..` is used to concatenate the strings. We don't have {} type formatting in Lua.
+
+### Put inside Rust 🦀
+
+This is an example code to show how a Lua script can be put inside a Rust program:
+
+```rust
+async fn get_first_pending_bundle(
+ con: &mut MultiplexedConnection,
+ chain_name: &str,
+) -> eyre::Result<Vec<PendingPaymentTx>> {
+ let pending_bundle_ids_key = format!("pools2:{chain_name}:pending_bundle_ids");
+ let bundles_key_prefix = format!("pools2:{chain_name}:bundles:");
+
+ let lua_script = r#"
+    local pending_bundle_id = redis.call('LINDEX', KEYS[1], 0)
+    if not pending_bundle_id then
+        return {nil, {}}
+    end
+    local bundles_key = KEYS[2] .. pending_bundle_id
+    local bundles = redis.call('LRANGE', bundles_key, 0, -1)
+    return {pending_bundle_id, bundles}
+    "#;
+
+ let script = Script::new(lua_script);
+ let result: Vec<PendingPaymentTx> = script
+  .key(pending_bundle_ids_key)
+  .key(bundles_key_prefix)
+  .invoke_async(con)
+  .await?;
+
+ println!("Bundle's pending txs: {:#?}", result);
+
+ Ok(result)
+}
+```
+
+Here,
+
+- You can parse key(s) depending on how many DB keys are used in the script.
+- You can also parse `argv` depending on how many values to be used. Like insert transactions in a bundle. So, then transactions (serialized string) could be parsed into `argv`.
+- `Script::new(lua_script)` creates a new Lua script with the provided Lua code.
+- `.key(pending_bundle_ids_key)` adds the `pending_bundle_ids_key` as a key argument to the script.
+- `.key(bundles_key_prefix)` adds the `bundles_key_prefix` as a key argument to the script.
+- `.invoke_async(con)` invokes the script asynchronously using the provided connection.
 
 ## Redis-Python
 
