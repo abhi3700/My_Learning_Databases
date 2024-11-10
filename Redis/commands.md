@@ -263,6 +263,105 @@ Use of `lpop` & `lpush`
 3) "Girish"
 ```
 
+### 5. Sets
+
+Sets are very useful when you want to store a list of unique items.
+
+More:
+
+- No duplication
+- Unordered
+
+---
+
+Usage:
+
+- `sadd <key> <value>`: to add a value to a set.
+
+  ```sh
+  sadd foo 1 2 3
+  (integer) 3
+  ```
+
+- `smembers <key>`: to get all values of a set.
+
+  ```sh
+  smembers foo
+  1) "1"
+  2) "2"
+  3) "3"
+  ```
+
+- `srem <key> <value>`: to remove a value from a set.
+
+  ```sh
+  > srem foo 2
+  (integer) 1
+  > smembers foo
+  1) "1"
+  2) "3"
+  ```
+
+- `sismember <key> <value>`: to check if a value exists in a set.
+
+  ```sh
+  > sismember foo 1
+  (integer) 1
+  > sismember foo 2
+  (integer) 0
+  ```
+
+- `sunion <key1> <key2> ...`: to get the union of two or more sets.
+
+  ```sh
+  foo: 1 3
+  bar: 3 4 5 69
+  ```
+
+  ```sh
+  > sunion foo bar
+  1) "1"
+  2) "3"
+  3) "4"
+  4) "5"
+  5) "69"
+  ```
+
+- `sdiff <key1> <key2> ...`: to get the difference between two or more sets. Basically, the values that are present in the first set but not in the subsequent sets. NOTE: Order matters. Also, the value of 1st set has to be present in either of the subsequent sets to not be considered in the result.
+
+  ```sh
+  foo: 1 3
+  bar: 3 4 5 69
+  ```
+
+  ```sh
+  > sdiff foo bar
+  1) "1"
+  ```
+
+  Another example:
+
+  ```sh
+  SADD set1 "a" "b" "c" "d"
+  SADD set2 "c"
+  SADD set3 "a" "c" "e"
+  ```
+
+  To find elements in set1 that are not in set2 or set3:
+
+  ```sh
+  > sdiff set1 set2 set3
+  1) "b"
+  2) "d"
+  ```
+
+  Here,
+
+- `a` of set1 is present in set3.
+- `b` of set1 is neither present in set2 nor set3.
+- `c` of set1 is present in set2.
+- `d` of set1 is neither present in set2 nor set3.
+
 ---
 
 ### Example | Pools
@@ -377,7 +476,7 @@ And then run the script using the `EVAL` command or inside a rust program.
 eval "return \"Hello it's \" .. KEYS[1] .. \" but has a meeting on \" .. KEYS[2]" 2 Monday Blockchain
 ```
 
-> NOTE: Please note that `2` is the number of keys that the script will use. `..` is used to concatenate the strings. We don't have {} type formatting in Lua.
+> NOTE: Please note that `2` is the number of keys that the script will use. `..` is used to concatenate the strings. We don't have {} type formatting in Lua. Also, in LUA, the index starts from 1.
 
 ### Put inside Rust 🦀
 
