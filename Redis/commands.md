@@ -9,6 +9,7 @@
 ---
 
 - `redis-cli`: to access the redis server. By default, it runs on `localhost:6379`. Enters into interactive mode.
+- `redis-cli --loglevel verbose`: to get more verbose logging.
 - `redis-server`: to start the redis server.
 - `redis-cli --scan --pattern '*'`: to scan the keys without blocking the server (especially useful in production).
 
@@ -42,6 +43,7 @@ $ redis-cli --scan --pattern '*'
 
 </details>
 
+- `redis-cli --scan --pattern 'pools2:Ethereum:*' | xargs redis-cli DEL`: to delete all keys starting with `pools2:Ethereum:`. This is useful in production DB. Basically, it scans all keys starting with `pools2:Ethereum:` & then for each of them execute `redis-cli DEL` command on CLI, for which it uses `xargs` (bash) command.
 - `redis-cli -h <host> -p <port>`: to connect to a redis server running on a different host or port.
 - `info keyspace`: to get the number of keys in the database.
 - `info memory`: to get the memory usage of the database.
@@ -140,6 +142,23 @@ PONG
 ```
 
 ![](../img/1_set_get.png)
+
+More complex ones:
+
+```sh
+> set tx1 '{"from_user_id":"1001","token_address":"0xdac17f958d2ee523a2206206994597c13d831ec7","from_address":"0xc0ce9FfacE7522a7F40F38185e4D173a7aCda589","to_address":"0xe364Bba68779061D8EEF20B5D89Be195b263fC41","amount":"15000000"}'
+OK
+```
+
+Also,
+
+```sh
+> set pools:Ethereum:tx1 '{"from_user_id":"1001","token_address":"0xdac17f958d2ee523a2206206994597c13d831ec7","from_address":"0xc0ce9FfacE7522a7F40F38185e4D173a7aCda589","to_address":"0xe364Bba68779061D8EEF20B5D89Be195b263fC41","amount":"15000000"}'
+OK
+
+> get pools:Ethereum:tx1
+"{\"from_user_id\":\"1001\",\"token_address\":\"0xdac17f958d2ee523a2206206994597c13d831ec7\",\"from_address\":\"0xc0ce9FfacE7522a7F40F38185e4D173a7aCda589\",\"to_address\":\"0xe364Bba68779061D8EEF20B5D89Be195b263fC41\",\"amount\":\"15000000\"}"
+```
 
 ### 2. Multiple key:value
 
@@ -303,7 +322,7 @@ Usage:
   2) "3"
   ```
 
-- `sismember <key> <value>`: to check if a value exists in a set.
+- `sismember <key> <value>`: to check if a value exists in a set. If exists, returns `1`. Otherwise, returns `0`.
 
   ```sh
   > sismember foo 1
@@ -445,10 +464,15 @@ rpush pools:Ethereum:processing_bundle_ids 4
 
 ```sh
 redis-cli KEYS 'pools2:Ethereum:*' | xargs redis-cli DEL
+
+# For production, use the following command:
+redis-cli --scan --pattern 'pools2:Ethereum:*' | xargs redis-cli DEL
 ```
 
 List all matching keys starting with `pools2:Ethereum:` & then run `xargs` command to delete each of them with `redis-cli DEL` command.
 > This can be a heavy process run in production. So, expect some delay.
+>
+> NOTE: `xargs` is a UNIX command, not part of redis.
 
 ---
 
@@ -522,6 +546,28 @@ Here,
 - `.key(pending_bundle_ids_key)` adds the `pending_bundle_ids_key` as a key argument to the script.
 - `.key(bundles_key_prefix)` adds the `bundles_key_prefix` as a key argument to the script.
 - `.invoke_async(con)` invokes the script asynchronously using the provided connection.
+
+### Logging
+
+While running Lua scripts on Redis DB server, you might require to log the output to DB server's terminal, which can be done adding this line in the script:
+
+```lua
+redis.log(redis.LOG_NOTICE, "Hello, this is a log message")
+redis.log(redis.LOG_NOTICE, "ARGV[1]: " .. ARGV[1])
+redis.log(redis.LOG_NOTICE, "ARGV[2]: " .. ARGV[2])
+redis.log(redis.LOG_NOTICE, "ARGV[3]: " .. ARGV[3])
+redis.log(redis.LOG_NOTICE, "last_bundle_id: " .. last_bundle_id)
+```
+
+We can put inside the script (wherever used like inside Rust code). Then we get to see logs in the DB server's terminal like this:
+
+```sh
+38938:M 11 Nov 2024 00:44:43.235 * old_bundle_len: 0
+38938:M 11 Nov 2024 00:44:43.235 * ARGV[1]: {"from_user_id":"1001","token_address":"0xdac17f958d2ee523a2206206994597c13d831ec7","from_address":"0xc0ce9FfacE7522a7F40F38185e4D173a7aCda589","to_address":"0xe364Bba68779061D8EEF20B5D89Be195b263fC41","amount":"15000000"}
+38938:M 11 Nov 2024 00:44:43.235 * ARGV[2]: {"from_user_id":"1001","token_address":"0xdac17f958d2ee523a2206206994597c13d831ec7","from_address":"0xc0ce9FfacE7522a7F40F38185e4D173a7aCda589","to_address":"0xe364Bba68779061D8EEF20B5D89Be195b263fC41","amount":"16000000"}
+38938:M 11 Nov 2024 00:44:43.235 * ARGV[3]: 2
+38938:M 11 Nov 2024 00:44:43.235 * last_bundle_id: 0
+```
 
 ## Redis-Python
 
