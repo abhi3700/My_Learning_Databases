@@ -271,6 +271,7 @@ More:
 
 - No duplication
 - Unordered
+- In Lua scripts for redis atomic transactions, sets could be more efficient than lists when trying to find if an element exists. Because in lists, we have to iterate through the entire list to find if an element exists. Whereas, in sets, we can directly check if the element exists using `sismember` command.
 
 ---
 
