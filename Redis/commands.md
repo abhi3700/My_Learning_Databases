@@ -8,6 +8,13 @@
 
 ---
 
+- `redis-cli ping`: to check if the redis server is running.
+
+```sh
+$ redis-cli PING
+PONG
+```
+
 - `redis-cli`: to access the redis server. By default, it runs on `localhost:6379`. Enters into interactive mode.
 - `redis-cli --loglevel verbose`: to get more verbose logging.
 - `redis-server`: to start the redis server.
@@ -107,28 +114,40 @@ listener0:name=tcp,bind=*,bind=-::*,port=6379
 
 </details>
 
-- `ping`: to check if the redis server is running.
+- `GET <key>`: to get the value of a key.
+
+## Profiler | Monitoring
+
+In order to monitor the redis server, we can use the `MONITOR` command. This will print out all the commands that are being executed on the server to the terminal. This can be very useful in debugging & monitoring the server.
+> NOTE: You can view all logs including the script logs.
 
 <details>
-<summary>Usage</summary>
+<summary><b>Using CLI via <code>redis-cli monitor</code> command in a separate terminal</b></summary>
 
-```sh
-$ redis-cli PING
-PONG
-```
+![](../img/redis_monitor.png)
 
 </details>
 
-- `GET <key>`: to get the value of a key.
+It will keep printing the commands in the terminal until we stop it. To stop it, we can press `Ctrl + C`.
 
 ---
+
+There is another way to monitor i.e. using **"Redis Insight"** tool.
+
+<details>
+<summary><b>Using Redis Insight</b></summary>
+
+![](../img/redis_insight.png)
+
+</details>
 
 ## Data Structure
 
 > NOTE:
 >
-> - All keys are always string type.
-> - But, values can be of - string, list, hashes, and sets. Some advanced types include geospatial items and the new stream type.
+> - All keys are always `string` type.
+> - But, values can be of - `string`, `list`, `hashes`, and `sets`. Some advanced types include `geospatial` items and the new stream type.
+> - We can also set expiry to a key. This is useful in scenarios like session expiry, cache expiry, etc.
 
 ### 1. key:value
 
