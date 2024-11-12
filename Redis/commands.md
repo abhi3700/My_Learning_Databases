@@ -308,7 +308,7 @@ Sets are very useful when you want to store a list of unique items.
 More:
 
 - No duplication
-- Unordered
+- Unordered. So, can't remove from a specific index. That's why no such command like `lpop`, `rpop`, `lpush`, `rpush`.
 - In Lua scripts for redis atomic transactions, sets could be more efficient than lists when trying to find if an element exists. Because in lists, we have to iterate through the entire list to find if an element exists. Whereas, in sets, we can directly check if the element exists using `sismember` command.
 
 ---
@@ -329,6 +329,13 @@ Usage:
   1) "1"
   2) "2"
   3) "3"
+  ```
+
+- `scard <key>`: to get the number of elements in a set.
+
+  ```sh
+  > scard foo
+  (integer) 3
   ```
 
 - `srem <key> <value>`: to remove a value from a set.
