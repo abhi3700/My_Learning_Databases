@@ -410,6 +410,76 @@ Usage:
 
 ---
 
+### 6. Sorted Sets
+
+Here, score is the value by which the elements are ordered & rank is the position of the element in the sorted set.
+
+- Add a member/value with a score to a sorted set: `zadd <key> <score> <value>`
+
+  ```sh
+  # returns no. of elements added
+  zadd hello 1 1
+  (integer) 1
+  ```
+
+- Get the rank/index/position of a member/value: `zrank <key> <value>`
+
+  ```sh
+  # returns no. of elements added
+  zrank hello 1
+  (integer) 0
+  ```
+
+  NOTE: In case of unsorted set, the command is `SISMEMBER` instead of `ZRANK`.
+  
+  If not found, returns `nil`.
+
+- Get the score/key of a member/value: `zscore <key> <value>`
+
+  ```sh
+  zscore hello 1
+  "1"
+  ```
+
+  NOTE: In case of unsorted set, the command is `SISMEMBER` instead of `ZSCORE`.
+
+  If not found, returns `nil`.
+
+- Add multiple elements to same score:
+
+  ```sh
+  # returns no. of elements added
+  zadd hello 1 4
+  (integer) 1
+  ```
+
+- Add multiple elements with different scores to a sorted set:
+
+  ```sh
+  zadd hello 1 4 2 5
+  (integer) 1
+  ```
+
+  As (1, 4) is already added, so only (2, 5) is added.
+
+- Get all elements of a sorted set: `zrange <key> <start> <stop> [WITHSCORES]`
+
+  ```sh
+  # returns array of elements
+  zrange hello 0 -1
+  1) "1"
+  2) "4"
+  3) "5"
+  ```
+
+- Get length of a sorted set: `zcard <key>`
+
+  ```sh
+  # returns no. of elements
+  zcard hello
+  (integer) 3
+  ```
+
 ### Example | Pools
 
 ```json
