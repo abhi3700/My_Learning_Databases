@@ -135,6 +135,26 @@ Redis DB hosted on these platforms:
   - Redis Cloud (FREE plan | 1 DB with 30MB)
   - Rest cloud providers are with paid plans.
 
+## Advanced
+
+### Avoid dynamic Lua script
+
+This pertains to 2 things:
+
+- Avoid generating key names dynamically within the script.
+- Run script with `EVALSHA` and a saved hash, rather than loading the script every time.
+- Periodically flush the script cache with `SCRIPT FLUSH` command.
+
+The tip from Redis Insight advises against generating dynamic Lua scripts, as each unique script consumes memory when loaded into Redis’s script cache. Over time, this can lead to uncontrolled growth of the Lua script cache, potentially impacting performance. To mitigate this, it’s recommended to use parameterized scripts and manage the script cache by periodically flushing it with the SCRIPT FLUSH command.
+
+In your case, you’re using Lua scripts to automate multiple read/write operations in a single database request, executing them with EVALSHA and a saved hash. This approach aligns with best practices, as it involves loading the script once and reusing it, thereby avoiding the pitfalls associated with dynamic script generation.
+
+However, it’s crucial to ensure that your Lua scripts do not hardcode or programmatically generate key names. In a Redis Cluster setup, all keys accessed by a script must be explicitly provided as input arguments. Accessing keys with programmatically generated names or based on the contents of data structures stored in the database can lead to issues, as the script might attempt to access keys that reside on different nodes, causing errors. ￼
+
+To ensure compatibility with Redis Cluster, always pass the keys your script will access through the KEYS array, and avoid generating key names within the script itself. This practice ensures that all keys are correctly routed to the appropriate cluster node, maintaining the atomicity and consistency of your operations.
+
+In summary, while your current use of EVALSHA with saved hashes is appropriate, it’s essential to manage your Lua scripts carefully, especially in a clustered environment. Ensure that all keys are passed explicitly, monitor Lua memory consumption, and periodically flush the script cache to maintain optimal performance.
+
 ## References
 
 - ~~Practice online - <https://try.redis.io/>~~ [DEPRECATED]
