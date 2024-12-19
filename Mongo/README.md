@@ -1106,6 +1106,35 @@ MONGODB_URI=mongodb+srv://USERNAME:PASSWORD@cluster0.xrlfvc5.mongodb.net/?retryW
   }
   ```
 
+### 3. Invalid operator key
+
+- *Cause*: Suppose, there is a nested field: `address.house_number`. And you want to use `$add` operator on it. Then you might be using this:
+
+  ```rust
+  let update_doc = doc! {
+    "$set": {
+      "address.house_number": {
+        "$add": ["$house_number", 1]
+      }
+    }
+  }
+  ```
+
+  This is wrong because of wrong field used `house_number` whereas the full field name is: `address.house_number` as one of the operands.
+
+- *Solution*: So, rectify this to:
+  
+  ```diff
+  let update_doc = doc! {
+    "$set": {
+      "address.house_number": {
+  -     "$add": ["$house_number", 1]
+  +     "$add": ["$address.house_number", 1]
+      }
+    }
+  }
+  ```
+
 ## References
 
 ### Official
