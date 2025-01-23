@@ -480,6 +480,17 @@ Here, score is the value by which the elements are ordered & rank is the positio
   (integer) 3
   ```
 
+### 7. FlushDB
+
+Delete the entire database:
+
+> Make sure it should not be used in production as there might be other relevant data.
+
+```sh
+redis-cli -u <URL> FLUSHDB
+# redis-cli -u rediss://default:YTFhZmU3ZTZjNTQ0MTM3YjY3MWZmMGI3NzhkMzRhZHAxMA@dsfdsfd-sfdsfd-29705.redis.io:6379 FLUSHDB
+```
+
 ### Example | Pools
 
 ```json
