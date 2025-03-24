@@ -37,7 +37,7 @@ To get the replica nodes, run `$ python3 get_mongo_nodes.py` in [`nslookup`](./n
 
 ## Installation
 
-### Mac (M1)
+### Mac (Silicon)
 
 #### Server Setup on CLI
 
@@ -126,6 +126,8 @@ Build Info: {
     ```sh
     ❯ sudo mongod --dbpath /opt/homebrew/var/mongodb
     ```
+
+    > If there is any problem in the dbpath, then delete the `/opt/homebrew/var/mongodb` & recreate it and then retry. Otherwise, pass a custom one `~/mongodb-data` instead.
 
     The background process starts successfully...
 

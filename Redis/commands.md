@@ -317,19 +317,23 @@ Usage:
 
 - `sadd <key> <value>`: to add a value to a set.
 
-  ```sh
-  sadd foo 1 2 3
-  (integer) 3
-  ```
+```sh
+sadd foo 1 2 3
+(integer) 3
+
+# Can't add duplicate item
+sadd foo 1
+(integer) 0
+```
 
 - `smembers <key>`: to get all values of a set.
 
-  ```sh
-  smembers foo
-  1) "1"
-  2) "2"
-  3) "3"
-  ```
+```sh
+smembers foo
+1) "1"
+2) "2"
+3) "3"
+```
 
 - `scard <key>`: to get the number of elements in a set.
 
@@ -350,56 +354,56 @@ Usage:
 
 - `sismember <key> <value>`: to check if a value exists in a set. If exists, returns `1`. Otherwise, returns `0`.
 
-  ```sh
-  > sismember foo 1
-  (integer) 1
-  > sismember foo 2
-  (integer) 0
-  ```
+```sh
+> sismember foo 1
+(integer) 1
+> sismember foo 2
+(integer) 0
+```
 
 - `sunion <key1> <key2> ...`: to get the union of two or more sets.
 
-  ```sh
-  foo: 1 3
-  bar: 3 4 5 69
-  ```
+```sh
+foo: 1 3
+bar: 3 4 5 69
+```
 
-  ```sh
-  > sunion foo bar
-  1) "1"
-  2) "3"
-  3) "4"
-  4) "5"
-  5) "69"
-  ```
+```sh
+> sunion foo bar
+1) "1"
+2) "3"
+3) "4"
+4) "5"
+5) "69"
+```
 
 - `sdiff <key1> <key2> ...`: to get the difference between two or more sets. Basically, the values that are present in the first set but not in the subsequent sets. NOTE: Order matters. Also, the value of 1st set has to be present in either of the subsequent sets to not be considered in the result.
 
-  ```sh
-  foo: 1 3
-  bar: 3 4 5 69
-  ```
+```sh
+foo: 1 3
+bar: 3 4 5 69
+```
 
-  ```sh
-  > sdiff foo bar
-  1) "1"
-  ```
+```sh
+> sdiff foo bar
+1) "1"
+```
 
   Another example:
 
-  ```sh
-  SADD set1 "a" "b" "c" "d"
-  SADD set2 "c"
-  SADD set3 "a" "c" "e"
-  ```
+```sh
+SADD set1 "a" "b" "c" "d"
+SADD set2 "c"
+SADD set3 "a" "c" "e"
+```
 
   To find elements in set1 that are not in set2 or set3:
 
-  ```sh
-  > sdiff set1 set2 set3
-  1) "b"
-  2) "d"
-  ```
+```sh
+> sdiff set1 set2 set3
+1) "b"
+2) "d"
+```
 
   Here,
 
